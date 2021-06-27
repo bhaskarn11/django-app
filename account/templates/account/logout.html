@@ -1,0 +1,32 @@
+{% extends 'ecomm/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Ecomm.in - Login
+{% endblock title %}
+
+{%block header%}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid d-flex justify-content-center">
+        <a class="navbar-brand" href="/">
+            Bhaskar.in
+        </a>       
+    </div>
+</nav>
+{%endblock header%}
+
+{% block content %}
+    <div class="container my-3">
+        <div class="row ">
+            <div class="col col-md-5 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>You are logged out!</h4>
+                        <a href="{% url 'login' %}" class="btn btn-secodary">Login again</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
