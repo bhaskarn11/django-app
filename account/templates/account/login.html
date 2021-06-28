@@ -30,11 +30,12 @@
                                 {{ form | crispy }}
                             </fieldset>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col">
                                     <button class="btn btn-primary" type="submit" >Sign up</button>
+                                    <strong class="ms-2">Don't have an account? <a href="{% url 'register' %}">Signup</a></strong>
                                 </div>
                                 <span>
-                                    <small>Don't have an account? <a href="{% url 'register' %}">Signup here</a></small>
+                                    <small> <a href="{% url 'password_reset' %}">Forgot password</a></small>
                                 </span>
                             </div>
                         </div>

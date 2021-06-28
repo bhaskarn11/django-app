@@ -1,6 +1,6 @@
 {% extends 'ecomm/index.html' %}
 
-{% block title %}Ecomm.in - Search Result{% endblock title %}
+{% block title %}{% if not query == '' %} {{ query }} {% else %} Search result {% endif %} - Ecomm.in{% endblock title %}
 
 {% block content %}
     <div class="container my-3">
@@ -12,7 +12,8 @@
                         <div class="card flex-row">
                             <img src="{{ item.image.url }}" class="img-thumbnail card-img-top" style="max-width: 100px; max-height: 200px;" alt="{{ item.title }}">
                             <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
+                                <a class="text-decoration-none" href="{% url 'product-details' item.id %}">
+                                <h5 class="card-title">{{item.title}}</h5></a>
                                 <p class="card-text">{{ item.description }}</p>
                                 <h4>&#8377; {{item.price}}</h4>
                             </div>
@@ -21,7 +22,9 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <h3>Sorry no content found with this search</h3>
+                <div class="row " style="min-height: 300px;">                    
+                    <h3 class="mx-auto">Sorry no content found with this search</h3>
+                </div>
             {% endif %}
         </div>
     </div>

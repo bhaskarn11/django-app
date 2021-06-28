@@ -5,36 +5,63 @@
 {% block content %}
 	<div class="container-fluid my-3">
 		<div class="row">
+			
 			<div class="col col-md-3">
 				<div class="card">
 					<div class="card-body d-flex">
 						<img style="max-width: 60px; max-height: 60px" src="{{ user.profile.image.url }}" alt="profile pic" class=" rounded-circle account-img me-2">
 						<div class="ms-auto">
-							<h4 class="account-heading">{{ user.profile.name }}</h4>
+							<h4 class="account-heading">{{ user.first_name }} {{user.last_name}}</h4>
 							<a href="tel:{{user.profile.mobileNumber}}" class="text-info">{{user.profile.mobileNumber}}</a>
 							<a href='mailto:{{user.email}}' class="text-secondary">{{ user.email }}</a>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="col col-md-6">
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Personal Details</button>
+					</li>
+					<li class="nav-item" role="presentation">
+					<button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">Address</button>
+					</li>
+				</ul>
 				<div class="card">
 					<div class="card-header">
 						<legend>Update Profile Details</legend>
 					</div>
-					<form novalidate method="POST" enctype="multipart/form-data">
-					{% csrf_token %}
-						<div class="card-body">
-							<fieldset>
-								{{ u_form | crispy }}
-								{{ p_form | crispy }}
-							</fieldset>
-							<button class="btn btn-primary" type="submit" >Update profile</button>
-						</div>
-					</form>
+					<div class="card-body">
+						<form novalidate method="POST" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="tab-content" id="myTabContent">
+								<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+									{% csrf_token %}
+									<fieldset>
+										{{ u_form | crispy }}
+										{{ p_form | crispy }}
+									</fieldset>
+								</div>
+								<div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+									<fieldset>
+										<legend>Update Address</legend>
+										{{ address_form | crispy }}
+									</fieldset>
+								</div>
+								<button class="btn btn-primary" type="submit" >Update Details</button>
+							
+							</div>
+						</form>
+					</div>
+					
 				</div>
 			</div>
+			
 		</div>
 	</div>
 {% endblock content %}
+
+	
+	
+
+	

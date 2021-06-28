@@ -1,0 +1,31 @@
+{% extends 'ecomm/index.html' %}
+{% load crispy_forms_tags %}
+{% block title %} {{ object.title }} | Ecomm.com {% endblock title %}
+
+{%block header%}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid d-flex justify-content-center">
+        <a class="navbar-brand" href="/">
+            Bhaskar.in
+        </a>       
+    </div>
+</nav>
+{%endblock header%}
+
+{% block content %}
+    <div class="container my-4">
+        <strong class="fs-4">Order Checkout</strong>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                </form>
+            </div>
+            <div class="col">
+                <button class="btn btn-success btn-lg" type="submit">Place Order</button>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
