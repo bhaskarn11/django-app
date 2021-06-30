@@ -1,0 +1,30 @@
+{% extends 'ecomm/index.html' %}
+{% block title %}My Orders | Ecomm.com {% endblock title %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row">
+            {% if object_list %}
+            <ul class="list-group">
+                {% for order in object_list %}
+                    <li class="list-group-item">
+                        <strong>Order Id: {{ order.order_id }}</strong>
+                        {% if order.status == 'Ordered' %}
+                        <span class='badge bg-secondary'>{{ order.status }}</span>
+                        {% elif order.status == 'Shipped' %}
+                        <span class='badge bg-primary'>{{ order.status }}</span>
+                        {% else %}
+                        <span class='badge bg-success'>{{ order.status }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+             </ul>
+            {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                No orders to show
+            </div> 
+            <span><a class="btn btn-primary btn-md" href="{% url 'index' %}">Start Shopping</a></span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

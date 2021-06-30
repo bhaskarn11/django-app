@@ -9,20 +9,59 @@
             </div>
             <div class="col-12 col-md-7">
                 <h5>{{ object.title }}</h5>
+                <small>
+                    {% if rating %}
+                        {{rating}}
+                    {% endif %}
+                </small>
                 <div class="row">
-                    <div class="co">
-                        <h3>&#8377; {{ object.price }}</h3>
+                    <div>
+                        {% if object.discount_price %}
+                            <span>
+                                &#8377; <del>{{ object.price }}</del>
+                                <h3>&#8377; {{ object.discount_price }}</h3>
+                            </span>
+                        {% else %}
+                            <span><h3>&#8377; {{ object.price }}</h3></span>
+                        {% endif %}
                     </div>
                     <div class="col">
                     <p>{{ object.description }}</p>
                     </div>
                 </div>
                 <div class="d-inline-flex">
-                    <form class="me-3" method="GET" action="{% url 'order-checkout' %}">
+                    <form class="me-3" method="POST" action="{% url 'order-checkout' %}">
                         {% csrf_token %}
+                        <fieldset>
+                            <input type="hidden" name="item" id="item" value="{{ object.id }}">
+                        </fieldset>
                         <button class="btn btn-warning btn-lg " type="submit"><i class="bi bi-lightning-charge-fill"></i>Buy Now</button>
                     </form>
                         <button class="btn btn-info btn-lg" type="submit"><i class="bi bi-cart-plus-fill me-2"></i>Add to Cart</button>                  
+                </div>
+                <div class="card my-4">
+                    <div class="card-header"><strong>Product Reviews</strong></div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% if reviews %}
+                                {% for review in reviews %}
+                                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                                    <span>Rating: {{review.rating}}</span>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ review.title }}</h5>
+                                        <small>3 days ago</small>
+                                    </div>
+                                    <p class="mb-1">{{ review.content }}</p>
+                                    <small>By {{ review.author }}</small>
+                                    </a>
+                                {% endfor %}
+                            {% else %}
+                                <div class="alert alert-primary" role="alert">
+                                    No reviews to show
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
