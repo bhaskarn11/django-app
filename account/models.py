@@ -17,7 +17,7 @@ class Address(models.Model):
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	image = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
-	# name = models.CharField(max_length=40, default='Anonymous')
+	display_name = models.CharField(max_length=40, default='Anonymous')
 	mobileNumber = models.CharField(max_length=16, null =True )
 	address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
 	def __str__(self):

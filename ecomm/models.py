@@ -39,19 +39,51 @@ class Review(models.Model):
     title = models.CharField(max_length=50)
     content = models.CharField(max_length=120)
     author = models.ForeignKey(
-        'account.Profile', on_delete=models.CASCADE, default=None)
+        'account.Profile', on_delete=models.CASCADE, default=None, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     rating = models.IntegerField(choices=RATING_CHOICE, default=None, blank=True, null=True)
-    # review_date = models.DateTimeField(auto_now_add=True)
+    review_date = models.DateTimeField(auto_now_add=True)
+
     def __repr__(self):
         return f"Review: {self.id}, {self.title}"
 
 
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    ordered = models.BooleanField(default=False)
+
+    @property
+    def get_cart_total(self):
+        cartitems = self.cartitem_set.all()
+        total = sum([item.get_total for item in cartitems ])
+        return total
+
+    @property
+    def get_cart_quantity(self):
+        cartitems = self.cartitem_set.all()
+        return sum(item.quantity for item in cartitems)
+    
+
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=SET_NULL, null=True)
+    quantity = models.IntegerField(default=0)
+    date_added = models.DateTimeField(auto_now_add=True)
+    price = models.DecimalField(default=0, decimal_places=2, max_digits=30)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+
+    @property
+    def get_total(self):
+        total = self.price * self.quantity
+        return total
+    
+
 class Order(models.Model):
+
     ORDER_STATUS = [
         ('Ordered', 'Ordered'),
         ('Shipped', 'Shipped'),
-        ('Completed', 'Completed')
+        ('Completed', 'Completed'),
+        ('Canceled', 'Canceled')
     ]
 
     order_id = models.UUIDField(default=uuid4().hex, unique=True)
@@ -61,17 +93,7 @@ class Order(models.Model):
     billing_address = models.TextField(max_length=200)
     status = models.CharField(choices=ORDER_STATUS, default='Ordered', max_length=12)
     customer = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+    items = models.ForeignKey(Cart, on_delete=models.DO_NOTHING, null=True)
 
     def __repr__(self):
-        return f"OrdeID: {self.oid} - {self.order_date}"
-
-
-class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-
-
-class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=SET_NULL, null=True)
-    quantity = models.IntegerField(default=0)
-    date_added = models.DateTimeField(auto_now_add=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+        return f"OrdeID: {self.order_id} - {self.order_date}"

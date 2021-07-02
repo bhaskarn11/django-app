@@ -1,69 +1,114 @@
 {% extends 'ecomm/index.html' %}
+{% load crispy_forms_tags %}
+
 {% block title %} {{ object.title }} | Ecomm.com {% endblock title %}
 
 {% block content %}
-    <div class="container my-5">
-        <div class="row">
-            <div class="col-12 col-md-5">
-                <img class="img-thumbnail mx-auto" width="inherit" height="inherit" src="{{ object.image.url }}" alt="{{object.title}}">
-            </div>
-            <div class="col-12 col-md-7">
-                <h5>{{ object.title }}</h5>
-                <small>
-                    {% if rating %}
-                        {{rating}}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 col-md-5">
+            <img class="img-thumbnail mx-auto" width="inherit" height="inherit" src="{{ object.image.url }}" alt="{{object.title}}">
+        </div>
+        <div class="col-12 col-md-7">
+            <h5>{{ object.title }}</h5>
+            <small>
+                {% if rating %}
+                    Rating: {{rating}}
+                {% endif %}
+            </small>
+            <div class="row">
+                <div>
+                    {% if object.discount_price %}
+                        <span>
+                            &#8377; <del>{{ object.price }}</del>
+                            <h3>&#8377; {{ object.discount_price }}</h3>
+                        </span>
+                    {% else %}
+                        <span><h3>&#8377; {{ object.price }}</h3></span>
                     {% endif %}
-                </small>
-                <div class="row">
-                    <div>
-                        {% if object.discount_price %}
-                            <span>
-                                &#8377; <del>{{ object.price }}</del>
-                                <h3>&#8377; {{ object.discount_price }}</h3>
-                            </span>
-                        {% else %}
-                            <span><h3>&#8377; {{ object.price }}</h3></span>
-                        {% endif %}
-                    </div>
-                    <div class="col">
-                    <p>{{ object.description }}</p>
-                    </div>
                 </div>
-                <div class="d-inline-flex">
-                    <form class="me-3" method="POST" action="{% url 'order-checkout' %}">
+                <div class="col">
+                <p>{{ object.description }}</p>
+                </div>
+            </div>
+            <div class="d-inline-flex">
+                <form class="me-3" method="POST" action="{% url 'order-checkout' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <input type="hidden" name="item" id="item" value="{{ object.id }}">
+                    </fieldset>
+                    <button class="btn btn-warning btn-lg " type="submit"><i class="bi bi-lightning-charge-fill"></i>Buy Now</button>
+                </form>
+                    <button class="btn btn-info btn-lg update-cart" data-product={{object.id}} data-action="add" type="button"><i class="bi bi-cart-plus-fill me-2"></i>Add to Cart</button>                  
+            </div>
+
+            <!-- review write modal START -->
+            <div class="modal fade" id="review-modal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reviewModalLabel">Write a Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="post-review-form" novalidate method="POST">
                         {% csrf_token %}
-                        <fieldset>
-                            <input type="hidden" name="item" id="item" value="{{ object.id }}">
-                        </fieldset>
-                        <button class="btn btn-warning btn-lg " type="submit"><i class="bi bi-lightning-charge-fill"></i>Buy Now</button>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Title</label>
+                                <input name="title" type="text" class="form-control" id="exampleFormControlInput1" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label">Review</label>
+                                <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                            <select name="rating" class="form-select" aria-label="Default select example">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="post-review-btn" type="submit" class="btn btn-primary">Submit</button>
+                        </div>
                     </form>
-                        <button class="btn btn-info btn-lg" type="submit"><i class="bi bi-cart-plus-fill me-2"></i>Add to Cart</button>                  
+                    </div>
                 </div>
-                <div class="card my-4">
-                    <div class="card-header"><strong>Product Reviews</strong></div>
-                    <div class="card-body">
-                        <div class="list-group">
-                            {% if reviews %}
-                                {% for review in reviews %}
-                                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+            </div>
+            <!-- END -->
+
+            <!-- review card START -->
+            <div class="card my-4">
+                <div class="card-header"><strong>Product Reviews</strong></div>
+                <div class="card-body">
+                    <div class="flex-row mb-2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#review-modal">Write a review</button>
+                    </div>
+                    <div class="list-group">
+                        {% if reviews %}
+                            {% for review in reviews %}
+                                <a href="#" class="list-group-item list-group-item-action mb-3" aria-current="true">
                                     <span>Rating: {{review.rating}}</span>
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">{{ review.title }}</h5>
-                                        <small>3 days ago</small>
+                                        <small>{{ review.review_date  }}</small>
                                     </div>
-                                    <p class="mb-1">{{ review.content }}</p>
-                                    <small>By {{ review.author }}</small>
-                                    </a>
-                                {% endfor %}
-                            {% else %}
-                                <div class="alert alert-primary" role="alert">
-                                    No reviews to show
-                                </div>
-                            {% endif %}
-                        </div>
+                                    <p>{{ review.content }}</p>
+                                    <hr>
+                                    <small>By {{ review.author.user.profile.display_name }}</small>
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-primary" role="alert">
+                                No reviews to show
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
+            <!-- review card END -->
         </div>
     </div>
+</div>
 {% endblock content %}

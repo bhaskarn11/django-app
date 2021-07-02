@@ -1,0 +1,33 @@
+{% extends 'ecomm/index.html' %}
+
+{% block title %}My Orders | Ecomm.in {% endblock title %}
+
+{% block content %}
+    <div class="container my-3">
+        <div class="row">
+            <div class="col">
+                <h4>Order Details</h4>
+                <hr>
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Order id: {{ object.order_id }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Order amount: </strong>&#8377; {{ object.order_amount }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Shipping Address: </strong> {{ object.shipping_address }}
+                            </li>
+                            <li class="list-group-item">
+
+                                <strong>Order date: </strong> {{ object.order_date }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

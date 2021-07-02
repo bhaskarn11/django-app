@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'account.apps.AuthConfig',
     'ecomm.apps.EcommConfig',
+    'api.apps.ApiConfig',
     'crispy_forms',
     'crispy_bootstrap5',
     'django.contrib.admin',
@@ -114,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
