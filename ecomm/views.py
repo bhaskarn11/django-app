@@ -4,10 +4,10 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, DetailView
-from .models import Cart, CartItem, Product, Order, Review
+from ecomm.models import Cart, CartItem, Product, Order, Review
 from django.db.models import Avg
 from django.contrib import messages
-from ecomm.forms import CreateReviewForm
+from ecomm.forms import ReviewForm
 # Create your views here.
 
 def index(request):
@@ -27,20 +27,29 @@ class SearchView(ListView):
 
 def productDetailView(request, pk):
     model = Product.objects.get(id=pk)
-    if request.method == 'GET':
-        form = CreateReviewForm()
-        context = {'object': model}
-        context['reviews'] = Review.objects.filter(product=pk).all().order_by('-review_date')
-        avg_rating = context['reviews'].aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
-        context['rating'] = int(avg_rating) if avg_rating else None 
-        context['form'] = form
-        return render(request, 'ecomm/product-details.html', context)
-    elif request.method == 'POST':
-        review = Review(title = request.POST['title'], content=request.POST['content'], rating=request.POST['rating'], author=request.user.profile, product = model)
-        review.save()
-        messages.success(request,'Review posted!')
-        return redirect('product-details', pk)
- 
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if request.user.is_authenticated:
+            if form.is_valid():
+                data = form.cleaned_data
+                review = Review(title= data['title'], content=data['content'], author=request.user.profile, product = model)
+                review.save()
+                messages.success(request,'Review posted!')
+                return redirect('product-details', pk)
+            else:
+                pass 
+        else:
+            messages.warning(request, 'You have to login to post a review!')
+            return redirect('product-details', pk)  
+
+    form = ReviewForm()
+    reviews = Review.objects.filter(product=pk).all().order_by('-review_date')
+    avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
+    rating= int(avg_rating) if avg_rating else None 
+
+    return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'rating':rating, 'object': model })
+
 
 class OrderCreateView(CreateView):
     model = Order
@@ -67,6 +76,15 @@ class OrderDetailView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     customer = self.request.user
+    #     cart = self.object.get(customer = customer)
+    #     items = cart.cartitem_set.all()
+    #     context['items'] = items
+    #     return context
+
     
 
 def cart(request):

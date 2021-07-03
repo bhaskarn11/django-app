@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from uuid import uuid4
-from django.db.models.deletion import SET_NULL
-from django.utils import timezone
 # Create your models here.
 PRODUCT_CATEGORY = [
     ('Books', 'Books'),
@@ -65,7 +63,7 @@ class Cart(models.Model):
     
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=SET_NULL, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=0)
     date_added = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=30)
@@ -86,12 +84,22 @@ class Order(models.Model):
         ('Canceled', 'Canceled')
     ]
 
-    order_id = models.UUIDField(default=uuid4().hex, unique=True)
+    PAYMENT_OPTION = [
+        ('Credit Card/Debit Card', 'Credit Card/Debit Card'),
+        ('COD', 'COD'),
+        ('Wallet', 'Wallet'),
+        ('UPI', 'UPI'),
+        ('Net Banking','Net Banking')
+    ]
+
+    order_id = models.UUIDField(default=uuid4().hex, unique=True, primary_key=True)
     order_amount = models.FloatField(default=None, null=True)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
-    shipping_address = models.TextField(max_length=200)
-    billing_address = models.TextField(max_length=200)
+    shipping_address = models.TextField(max_length=150)
+    billing_address = models.TextField(max_length=150)
     status = models.CharField(choices=ORDER_STATUS, default='Ordered', max_length=12)
+    transaction_id = models.CharField(max_length=50, null=True)
+    payment_method = models.CharField(choices=PAYMENT_OPTION, max_length=30, null= True)
     customer = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
     items = models.ForeignKey(Cart, on_delete=models.DO_NOTHING, null=True)
 

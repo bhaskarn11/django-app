@@ -2,18 +2,28 @@
 {% block title %}My Orders | Ecomm.com {% endblock title %}
 
 {% block content %}
-    <div class="container my-5">
+    <div class="container my-3">
+        <h5>My Orders</h5>
+        <hr>
         <div class="row">
             {% if object_list %}
             <div class="list-group">
                 {% for order in object_list %}
-                    <a href="{% url 'order-details' order.id %}" class="list-group-item list-group-item-action mb-3" aria-current="true">
+                    <a href="{% url 'order-details' order.order_id %}" class="list-group-item list-group-item-action mb-3" aria-current="true">
                       <div class="d-flex w-100 justify-content-between">
                         <strong class="mb-1">Order Id: {{ order.order_id }}</strong>
                         <small>{{ order.order_date }}</small>
                       </div>
                       <p class="mb-1">{{ order.shipping_address }}</p>
-                      <span class="badge rounded-pill bg-primary" >{{order.status}}</span>
+                      {% if order.status == 'Ordered' %}
+                        <span class="badge rounded-pill bg-secondary" >{{order.status}}</span>
+                      {% elif order.status == 'Shipped' %}
+                        <span class="badge rounded-pill bg-primary" >{{order.status}}</span>
+                      {% elif order.status == 'Canceled' %}
+                        <span class="badge rounded-pill bg-danger" >{{order.status}}</span>
+                      {% else %}
+                        <span class="badge rounded-pill bg-success" >{{order.status}}</span>
+                      {% endif %}
                     </a>
                 {% endfor %}
             </div>

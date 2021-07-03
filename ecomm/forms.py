@@ -1,17 +1,15 @@
-from ecomm.models import Review
 from django import forms
-from account.models import Profile
 
-class CreateReviewForm(forms.ModelForm):
-    # author = forms.ChoiceField()
-    # product = forms.ChoiceField()
-    # def __init__(self, *args, **kwargs):
-    #     self.author = 
-
-    class Meta:
-        model = Review
-        fields = ['title', 'content', 'rating']
-        excludes = ['author', 'product']
-
+class ReviewForm(forms.Form):
+    choice = [
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5')
+    ]
+    title = forms.CharField(validators=[forms.ValidationError])
+    content = forms.CharField(widget=forms.Textarea({'rows': 3}), label='Review')
+    rating = forms.ChoiceField(choices=choice)
 
 

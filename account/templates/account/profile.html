@@ -36,7 +36,6 @@
 							{% csrf_token %}
 							<div class="tab-content" id="myTabContent">
 								<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-									{% csrf_token %}
 									<fieldset>
 										{{ u_form | crispy }}
 										{{ p_form | crispy }}

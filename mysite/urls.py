@@ -31,7 +31,8 @@ urlpatterns = [
     path('password-reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='account/password-reset-confirm.html'), name ='password_reset_confirm'),
     path('password-reset/success', PasswordResetCompleteView.as_view(template_name = 'account/password-reset-complete.html'), name='password_reset_complete'),
     path('updatecart', views.updateCart, name='update-cart'),
-    path('api/', include('api.urls')) # API endpoints
+    path('api/', include('api.urls')), # API endpoints
+    path('seller/', include('sellercentral.urls'))
 ] 
 
 

@@ -24,9 +24,10 @@ def profile(request):
         p_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
         address_form = AddressUpdateForm(request.POST, instance=request.user.profile.address)
 
-        if u_form.is_valid() and p_form.is_valid():
+        if u_form.is_valid() and p_form.is_valid() and address_form.is_valid():
             u_form.save()
             p_form.save()
+            address_form.save()
             messages.success(request, 'Account details has been updated!')
             return redirect('profile')
     

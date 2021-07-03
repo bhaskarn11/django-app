@@ -15,8 +15,11 @@ def post_review(request):
         
 def get_total_cart_quantity(request):
     if request.method == 'GET':
-        try:
-            cart = Cart.objects.get(user = request.user)
-            return JsonResponse({"data": cart.get_cart_quantity}, safe=False)
-        except Exception as e:
-            return JsonResponse({'error': e}, safe=False)
+        if request.user.is_authenticated:
+            try:
+                cart = Cart.objects.get(user = request.user)
+                return JsonResponse({"data": cart.get_cart_quantity}, safe=False)
+            except Exception as e:
+                return JsonResponse({'error': e}, safe=False)
+        else:
+            return JsonResponse({'data': 0})

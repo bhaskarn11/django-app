@@ -50,27 +50,15 @@
                         <h5 class="modal-title" id="reviewModalLabel">Write a Review</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form id="post-review-form" novalidate method="POST">
+                    <form novalidate method="POST">
                         {% csrf_token %}
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Title</label>
-                                <input name="title" type="text" class="form-control" id="exampleFormControlInput1" >
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="form-label">Review</label>
-                                <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
-                            <select name="rating" class="form-select" aria-label="Default select example">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
+                            <fieldset>
+                                {{ form | crispy }}
+                            </fieldset>
                         </div>
                         <div class="modal-footer">
-                            <button id="post-review-btn" type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                     </div>
