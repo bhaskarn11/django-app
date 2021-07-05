@@ -13,8 +13,8 @@ class Product(models.Model):
     title = models.CharField(max_length=60)
     description = models.TextField(max_length=500)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY,default=None, null=True)
-    price = models.DecimalField(null=True, decimal_places=2, max_digits=10)
-    discount_price = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=10)
+    unitprice = models.DecimalField(null=True, decimal_places=2, max_digits=10)
+    discount_unitprice = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=10)
     image = models.ImageField(
         default='products/default.jpg', upload_to='products')
     stock = models.PositiveIntegerField()
@@ -93,15 +93,38 @@ class Order(models.Model):
     ]
 
     order_id = models.UUIDField(default=uuid4().hex, unique=True, primary_key=True)
-    order_amount = models.FloatField(default=None, null=True)
+    order_amount = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=50)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
     shipping_address = models.TextField(max_length=150)
     billing_address = models.TextField(max_length=150)
     status = models.CharField(choices=ORDER_STATUS, default='Ordered', max_length=12)
     transaction_id = models.CharField(max_length=50, null=True)
+    payment_id = models.CharField(max_length=50, null=True)
     payment_method = models.CharField(choices=PAYMENT_OPTION, max_length=30, null= True)
     customer = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-    items = models.ForeignKey(Cart, on_delete=models.DO_NOTHING, null=True)
+    # items = models.ForeignKey(Cart, on_delete=models.DO_NOTHING, null=True)
+    
+    @property
+    def get_order_amount(self):
+        items = self.get_order_items
+        order_amount = sum([item.get_total for item in items])
+        return order_amount
+    @property
+    def get_order_items(self):
+        items = self.items.cartitem_set.all()
+        return items
 
     def __repr__(self):
         return f"OrdeID: {self.order_id} - {self.order_date}"
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    # item = models.ForeignKey(CartItem, on_delete=models.DO_NOTHING, null= True)
+    quantity = models.IntegerField(default=0)
+    price = models.DecimalField(default=0, decimal_places=2, max_digits=30)
+    
+    @property
+    def get_total(self):
+        total = self.price * self.quantity
+        return total

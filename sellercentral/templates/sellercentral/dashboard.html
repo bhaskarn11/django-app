@@ -49,16 +49,21 @@
     <div class="container my-3">
         <div class="row">
             <div class="col">
+                {% load humanize %}
                 <h4>Total Orders</h4>
-                <span>230</span>
+                <span>{{ total_order}}</span>
             </div>
             <div class="col">
                 <h4>Total Order Amount</h4>
-                <span>135400.00</span>
+                <span>&#8377; {{ total_order_amount|intcomma  }}</span>
             </div>
             <div class="col">
                 <h4>Order Completed</h4>
-                <span>20</span>
+                <span>{{ completed_orders }}</span>
+            </div> 
+            <div class="col">
+                <h4>Order Canceled</h4>
+                <span>{{ canceled_orders }}</span>
             </div> 
         </div> 
         <hr>

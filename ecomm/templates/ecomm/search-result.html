@@ -1,5 +1,5 @@
 {% extends 'ecomm/index.html' %}
-
+{% load humanize %}
 {% block title %}{% if not query == '' %} {{ query }} {% else %} Search result {% endif %} - Ecomm.in{% endblock title %}
 
 {% block content %}
@@ -15,7 +15,7 @@
                                 <a class="text-decoration-none" href="{% url 'product-details' item.id %}">
                                 <h5 class="card-title">{{item.title}}</h5></a>
                                 <p class="card-text">{{ item.description }}</p>
-                                <h4>&#8377; {{item.price}}</h4>
+                                <h4>&#8377; {{ item.unitprice| intcomma }}</h4>
                             </div>
                         </div>
                     </li>

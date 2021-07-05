@@ -16,6 +16,17 @@ class Address(models.Model):
     state = models.CharField(max_length=2, choices=STATES, default='WB')
     country = models.CharField(max_length=2, choices=COUNTRIES, default='IN')
 
+    @property
+    def get_address(self):
+        address = {
+            'address': self.address,
+            'pincode': self.pincode,
+            'city': self.city,
+            'state': self.state,
+            'country': self.country
+        }
+        return address
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

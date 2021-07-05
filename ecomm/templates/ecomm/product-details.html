@@ -21,10 +21,10 @@
                     {% if object.discount_price %}
                         <span>
                             &#8377; <del>{{ object.price }}</del>
-                            <h3>&#8377; {{ object.discount_price }}</h3>
+                            <h3>&#8377; {{ object.discount_unitprice }}</h3>
                         </span>
                     {% else %}
-                        <span><h3>&#8377; {{ object.price }}</h3></span>
+                        <span><h3>&#8377; {{ object.unitprice }}</h3></span>
                     {% endif %}
                 </div>
                 <div class="col">
@@ -32,11 +32,10 @@
                 </div>
             </div>
             <div class="d-inline-flex">
-                <form class="me-3" method="POST" action="{% url 'order-checkout' %}">
+                <form class="me-3" method="GET" action="{% url 'order-checkout' %}">
                     {% csrf_token %}
-                    <fieldset>
-                        <input type="hidden" name="item" id="item" value="{{ object.id }}">
-                    </fieldset>
+                    <input type="hidden" name="productId" value="{{ object.id }}">
+                    <input type="hidden" name="action" value="buynow">
                     <button class="btn btn-warning btn-lg " type="submit"><i class="bi bi-lightning-charge-fill"></i>Buy Now</button>
                 </form>
                     <button class="btn btn-info btn-lg update-cart" data-product={{object.id}} data-action="add" type="button"><i class="bi bi-cart-plus-fill me-2"></i>Add to Cart</button>                  

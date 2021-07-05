@@ -1,12 +1,12 @@
 {% extends 'sellercentral/dashboard.html' %}
-
+{% load humanize %}
 {% block content %}
     <div class="container my-3">
         <div class="row">
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        <span >OrderId: <strong>{{ object.order_id }}</strong></span>
+                        <span >Order Id: <strong>{{ object.order_id }}</strong></span>
                         {% if order.status == 'Ordered' %}
                                <small class="badge rounded-pill bg-secondary" >{{ order.status }}</small>
                                {% elif order.status == 'Shipped' %}
@@ -29,17 +29,18 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        <strong>Items in the order</strong>
+                        <strong>Items in this order</strong>
                     </div>
                     <div class="card-body">
                         <table class="table">
+                            <caption><small>* all prices include GST</small></caption>
                             <thead>
                                 <tr>
                                     <th class="col">PID</th>
-                                    <th class="col">Name</th>
-                                    <th class="col">Price/item</th>
+                                    <th class="col">Product Title</th>
+                                    <th class="col">Price/item (&#8377;)</th>
                                     <th class="col">Qty.</th>
-                                    <th class="col">Total</th>
+                                    <th class="col">Total (&#8377;)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,17 +48,19 @@
                                <tr>
                                     <th scope="row" >{{ item.product.id }}</th>
                                     <td>{{ item.product.title }}</td>
-                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.price |intcomma  }}</td>
                                     <td>{{ item.quantity }}</td>
-                                    <td>{{ item.get_total }}</td>
+                                    <td>{{ item.get_total |intcomma }}</td>
                                 </tr>
                                {% endfor %}
                             </tbody>
                             <tfoot>
                                 <td>
-                                    <strong>Total Amount: {{ object.order_amount }}</strong>
+                                    <strong>Total Amount:&#8377; {{ object.get_order_amount | intcomma  }}</strong>
                                 </td>
+                                
                             </tfoot>
+                            
                         </table>
                     </div>
                 </div>

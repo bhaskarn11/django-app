@@ -1,9 +1,9 @@
 {% extends 'ecomm/index.html' %}
 {% load crispy_forms_tags %}
-{% block title %} {{ object.title }} | Ecomm.com {% endblock title %}
+{% block title %} Checkout | Ecomm.com {% endblock title %}
 
 {%block header%}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid d-flex justify-content-center">
         <a class="navbar-brand" href="/">
             Bhaskar.in
@@ -17,14 +17,29 @@
         <strong class="fs-4">Order Checkout</strong>
         <hr>
         <div class="row">
-            <div class="col">
-                <form method="POST" action="">
-                    {% csrf_token %}
-                    {{ form | crispy }}
+            <div class="col-12 col-md-6">
+                <form method="POST" action="{% url 'order-checkout'  %}">
+                {% csrf_token %}
+                        <input type="hidden" name="productId" value="{{ product.id }}">
+                        {{ form | crispy }}
+                    <button class="btn btn-warning w-75" type="submit">Place Order</button>
                 </form>
             </div>
-            <div class="col">
-                <button class="btn btn-success btn-lg" type="submit">Place Order</button>
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header"><h4>Order summery</h4></div>
+                    <div class="card-body">
+                        <ol class="list-group list-group-numbered">
+                            <li class="d-flex justify-content-between list-group-item">
+                                <!-- <div class=""> -->
+                                    {% load humanize %}
+                                    <strong>{{ product.title }}</strong>
+                                    <h6>&#8377; {{ product.unitprice | intcomma }}</h6>
+                                <!-- </div> -->
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -29,7 +29,7 @@ else:
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a1hvi&46y_2--8!2w=)4kphd2+_in$@e=7)j$r$5nl1p1kc4&%'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = []
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'storages'
 ]
 
@@ -84,6 +85,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+# MONGODB_URI = os.getenv('MONGODB_URI')
 
 DATABASES = {
     'default': {
@@ -91,7 +93,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -130,6 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -150,7 +152,7 @@ LOGIN_URL = 'login'
 
 
 DEFAULT_FROM_EMAIL = 'developer.bhaskarn@gmail.com'
-# sendgrid SMTP email integration
+# sendinblue SMTP email integration
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv('EMAIL_HOST')
@@ -166,7 +168,9 @@ AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_S3_REGION_NAME = 'ap-south-1' 
 AWS_S3_FILE_OVERWRITE = False
-AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL = 'public-read'
+# AWS_QUERYSTRING_AUTH = False
 
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 AWS_LOCATION = 'media'

@@ -12,9 +12,9 @@ function updateCartBadge() {
 		if (response){
 			response.json().then(data => {
 				if (parseInt(data.data) > 99){
-					element.innerText = '99' + '+'
+					element.innerHTML = '99' + '+'
 				} else{
-					element.innerText = data.data
+					element.innerHTML = data.data
 				}
 			})
 		}
