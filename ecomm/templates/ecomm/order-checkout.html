@@ -18,7 +18,7 @@
         <hr>
         <div class="row">
             <div class="col-12 col-md-6">
-                <form method="POST" action="{% url 'order-checkout'  %}">
+                <form method="POST" action="{% url 'order-checkout' %}">
                 {% csrf_token %}
                         <input type="hidden" name="productId" value="{{ product.id }}">
                         {{ form | crispy }}

@@ -11,9 +11,11 @@ from ecomm.models import Cart, CartItem, OrderItem, Product, Order, Review
 from django.db.models import Avg
 from django.contrib import messages
 from ecomm.forms import CheckoutForm, ReviewForm
+from django.views.decorators.csrf import csrf_exempt
 # razorpay api
 import razorpay
-import hmac
+client = razorpay.Client(auth=(os.getenv('RAZORPAY_API_KEY'), os.getenv('RAZORPAY_API_KEY_SECRET')))
+from .utils import verify_payment_signanture
 # Create your views here.
 
 def index(request):
@@ -139,18 +141,17 @@ class CheckoutView(View):
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST)
-        client = razorpay.Client(auth=(os.getenv('RAZORPAY_API_KEY'), os.getenv('RAZORPAY_API_KEY_SECRET')))
         if form.is_valid():
             data = form.cleaned_data
-            address = f"{data['address']},\n{data['city']} ,{data['state']}-{data['pincode']},\n {data['country']}"
+            address = f"{data['address']},\n{data['city']} ,{data['state']}-{data['pincode']},\n{data['country']}"
             product = Product.objects.get(id=self.request.POST.get('productId'))
+            
             order = Order(
                         customer = self.request.user, order_amount = product.unitprice,
                         payment_method=data['payment_method'], shipping_address = address, billing_address=address)
             order.save()
             order_amount = int(order.order_amount * 100)
             order_receipt = order.order_id
-            # print(order_amount)
             DATA = {
                 'amount': order_amount,
                 'currency': 'INR',
@@ -169,13 +170,28 @@ def payment(request, order_id):
         context = {
             'amount': int(order.order_amount * 100),
             'order_id': order.transaction_id,
+            'order': order
         }
         return render(request, 'ecomm/checkout-payment.html', context)
     else:
         return HttpResponseNotAllowed
 
-def payment_success(request):
-    response = request.POST
-    # hmac.digest(bytearray(os.getenv('RAZORPAY_API_KEY_SECRET')))
-    return render(request, 'ecomm/order-success.html')
+@csrf_exempt
+def payment_success(request, order_id):
+    if request.method == 'POST':
+        # data = json.loads(request.body)
+        # response = data.get('response')
+        # order_id = data.get('order_id')
+        # order = Order.objects.get(pk=order_id)
+        # key =os.getenv('RAZORPAY_API_KEY_SECRET')
+        # matched = verify_payment_signanture(order.transaction_id, request.POST.get('razorpay_payment_id'), request.POST.get('razorpay_signature'),key)
+        # if matched:
+        Order.objects.filter(pk=order_id).update(payment_id=request.POST.get('razorpay_payment_id'))
+        return render(request, 'ecomm/order-success.html')
+    else:
+        return HttpResponseNotAllowed
+    #     else:
+    #         return JsonResponse({'payment': 'not verified'})
+    # elif request.method == 'GET':
+    #     return render(request, 'ecomm/order-success.html')
 

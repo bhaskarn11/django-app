@@ -1,6 +1,6 @@
 {% extends 'ecomm/index.html' %}
 {% load crispy_forms_tags %}
-
+{% load humanize %}
 {% block title %} {{ object.title }} | Ecomm.com {% endblock title %}
 
 {% block content %}
@@ -20,11 +20,11 @@
                 <div>
                     {% if object.discount_price %}
                         <span>
-                            &#8377; <del>{{ object.price }}</del>
-                            <h3>&#8377; {{ object.discount_unitprice }}</h3>
+                            &#8377; <del>{{ object.price | intcomma }}</del>
+                            <h3>&#8377; {{ object.discount_unitprice | intcomma }}</h3>
                         </span>
                     {% else %}
-                        <span><h3>&#8377; {{ object.unitprice }}</h3></span>
+                        <span><h3>&#8377; {{ object.unitprice | intcomma }}</h3></span>
                     {% endif %}
                 </div>
                 <div class="col">

@@ -34,5 +34,5 @@ class CheckoutForm(forms.Form):
     state = forms.ChoiceField(choices=STATES)
     country = forms.ChoiceField(choices=COUNTRIES)
     payment_method = forms.ChoiceField(choices=PAYMENT_OPTION, widget=RadioSelect, initial='Credit Card/Debit Card')
-
+    shipping_address_is_billing_address = forms.BooleanField(initial=True)
 
