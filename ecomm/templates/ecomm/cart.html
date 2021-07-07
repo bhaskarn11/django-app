@@ -51,7 +51,12 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="{% url 'order-checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+                    <form class="me-3" method="GET" action="{% url 'order-checkout' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="cartId" value="{{ cart.id }}">
+                        <input type="hidden" name="action" value="cart">
+                        <button class="btn btn-warning " type="submit">Proceed to Checkout</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -1,0 +1,19 @@
+{% extends 'checkout/order-checkout.html' %}
+{% block title %} Payment Success | Ecomm.com {% endblock title %}
+{% block content%}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">Something went wrong!</h4>
+                            <p>Looks like there was an error with your payment!</p>
+                        </div>
+                        <a class="btn btn-primary mt-3" href="{% url 'myorder' %}">Goto My Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

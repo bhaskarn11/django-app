@@ -33,9 +33,9 @@
             </div>
             <div class="d-inline-flex">
                 <form class="me-3" method="GET" action="{% url 'order-checkout' %}">
-                    {% csrf_token %}
                     <input type="hidden" name="productId" value="{{ object.id }}">
                     <input type="hidden" name="action" value="buynow">
+                    {% csrf_token %}
                     <button class="btn btn-warning btn-lg " type="submit"><i class="bi bi-lightning-charge-fill"></i>Buy Now</button>
                 </form>
                     <button class="btn btn-info btn-lg update-cart" data-product={{object.id}} data-action="add" type="button"><i class="bi bi-cart-plus-fill me-2"></i>Add to Cart</button>                  

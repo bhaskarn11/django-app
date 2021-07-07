@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'account.apps.AuthConfig',
     'ecomm.apps.EcommConfig',
     'api.apps.ApiConfig',
+    'checkout.apps.CheckoutConfig',
     'sellercentral.apps.SellercentralConfig',
     'crispy_forms',
     'crispy_bootstrap5',

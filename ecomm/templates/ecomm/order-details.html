@@ -1,30 +1,63 @@
 {% extends 'ecomm/index.html' %}
-
+{% load humanize %}
 {% block title %}My Orders | Ecomm.in {% endblock title %}
 
 {% block content %}
     <div class="container my-3">
+        <h4>Order Details</h4>
+        <hr>
         <div class="row">
             <div class="col">
-                <h4>Order Details</h4>
-                <hr>
                 <div class="card">
                     <div class="card-header">
                         <strong>Order id: {{ object.order_id }}</strong>
+                        {% if order.status == 'Ordered' %}
+                        <span class="badge rounded-pill bg-secondary" >{{order.status}}</span>
+                        {% elif order.status == 'Shipped' %}
+                        <span class="badge rounded-pill bg-primary" >{{order.status}}</span>
+                        {% elif order.status == 'Canceled' %}
+                        <span class="badge rounded-pill bg-danger" >{{order.status}}</span>
+                        {% elif order.status == 'Pending' %}
+                        <span class="badge rounded-pill bg-warning" >{{order.status}}</span>
+                        {% else %}
+                        <span class="badge rounded-pill bg-success" >{{order.status}}</span>
+                        {% endif %}
                     </div>
                     <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <strong>Order amount: </strong>&#8377; {{ object.order_amount }}
-                            </li>
-                            <li class="list-group-item">
-                                <strong>Shipping Address: </strong> {{ object.shipping_address }}
-                            </li>
-                            <li class="list-group-item">
-
-                                <strong>Order date: </strong> {{ object.order_date }}
-                            </li>
-                        </ul>
+                        <div class="col">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Order amount: </strong>&#8377; {{ object.order_amount }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Shipping Address: </strong> {{ object.shipping_address }}
+                                </li>
+                                <li class="list-group-item">
+    
+                                    <strong>Order date: </strong> {{ object.order_date }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card my-2 my-md-0">
+                    <div class="card-header">
+                        <strong>Items in this order</strong>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="col">
+                            <ul class="list-group list-group-flush">
+                                {% for item in items %}
+                                    <li class="list-group-item">
+                                        <strong>{{ item.product.title }}</strong>
+                                        <h5>&#8377; {{ item.get_total | intcomma }}</h5>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

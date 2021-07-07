@@ -20,9 +20,11 @@
                       {% elif order.status == 'Shipped' %}
                         <span class="badge rounded-pill bg-primary" >{{order.status}}</span>
                       {% elif order.status == 'Canceled' %}
-                        <span class="badge rounded-pill bg-danger" >{{order.status}}</span>
+                      <span class="badge rounded-pill bg-danger" >{{order.status}}</span>
+                      {% elif order.status == 'Pending' %}
+                      <span class="badge rounded-pill bg-warning" >{{order.status}}</span>
                       {% else %}
-                        <span class="badge rounded-pill bg-success" >{{order.status}}</span>
+                      <span class="badge rounded-pill bg-success" >{{order.status}}</span>
                       {% endif %}
                     </a>
                 {% endfor %}

@@ -60,6 +60,10 @@ class Cart(models.Model):
     def get_cart_quantity(self):
         cartitems = self.cartitem_set.all()
         return sum(item.quantity for item in cartitems)
+    @property
+    def get_cartitems(self):
+        cartitems = self.cartitem_set.all()
+        return cartitems
     
 
 class CartItem(models.Model):
@@ -81,7 +85,8 @@ class Order(models.Model):
         ('Ordered', 'Ordered'),
         ('Shipped', 'Shipped'),
         ('Completed', 'Completed'),
-        ('Canceled', 'Canceled')
+        ('Canceled', 'Canceled'),
+        ('Pending', 'Pending')
     ]
 
     PAYMENT_OPTION = [
@@ -97,7 +102,7 @@ class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
     shipping_address = models.TextField(max_length=150)
     billing_address = models.TextField(max_length=150)
-    status = models.CharField(choices=ORDER_STATUS, default='Ordered', max_length=12)
+    status = models.CharField(choices=ORDER_STATUS, default='Pending', max_length=12)
     transaction_id = models.CharField(max_length=50, null=True)
     payment_id = models.CharField(max_length=50, null=True)
     payment_method = models.CharField(choices=PAYMENT_OPTION, max_length=30, null= True)
@@ -111,7 +116,7 @@ class Order(models.Model):
         return order_amount
     @property
     def get_order_items(self):
-        items = self.items.cartitem_set.all()
+        items = self.orderitem_set.all()
         return items
 
     def __repr__(self):
@@ -120,7 +125,6 @@ class Order(models.Model):
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    # item = models.ForeignKey(CartItem, on_delete=models.DO_NOTHING, null= True)
     quantity = models.IntegerField(default=0)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=30)
     
@@ -128,3 +132,4 @@ class OrderItem(models.Model):
     def get_total(self):
         total = self.price * self.quantity
         return total
+    

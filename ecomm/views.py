@@ -1,21 +1,13 @@
-import os
-from django.http.response import HttpResponseNotAllowed
-from account.models import Address
 import json
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, CreateView, DetailView, View
+from django.views.generic import ListView, DetailView, View
 from ecomm.models import Cart, CartItem, OrderItem, Product, Order, Review
 from django.db.models import Avg
 from django.contrib import messages
-from ecomm.forms import CheckoutForm, ReviewForm
-from django.views.decorators.csrf import csrf_exempt
-# razorpay api
-import razorpay
-client = razorpay.Client(auth=(os.getenv('RAZORPAY_API_KEY'), os.getenv('RAZORPAY_API_KEY_SECRET')))
-from .utils import verify_payment_signanture
+from ecomm.forms import ReviewForm
 # Create your views here.
 
 def index(request):
@@ -61,28 +53,31 @@ def productDetailView(request, pk):
 
 class OrderListView(ListView):
     model = Order
+    paginate_by = 15
+    # ordering = ['-order_date']
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-    def get_queryset(self):
-        query = Order.objects.filter(customer=self.request.user)
+    def get_queryset(self, *args, **kwargs):
+        query = Order.objects.filter(customer=self.request.user).order_by('-order_date')
         return query
 
 
 class OrderDetailView(DetailView):
     model = Order
+
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     customer = self.request.user
-    #     cart = self.object.get(customer = customer)
-    #     items = cart.cartitem_set.all()
-    #     context['items'] = items
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customer = self.request.user.pk
+        items = self.object.get_order_items
+        context['items'] = items
+        return context
 
     
 
@@ -107,7 +102,7 @@ def updateCart(request):
     customer = request.user
     product = Product.objects.get(id=productId)
     cart = Cart.objects.get(user=customer)
-    cartitem, created = CartItem.objects.get_or_create(cart = cart, product=product, price=product.price)
+    cartitem, created = CartItem.objects.get_or_create(cart = cart, product=product, price=product.unitprice)
     if action == 'add':
         cartitem.quantity = cartitem.quantity + 1
         cartitem.save()
@@ -119,79 +114,3 @@ def updateCart(request):
             cartitem.save()
 
     return JsonResponse({"added": True}, safe=False)
-
-
-class CheckoutView(View):
-    def get(self, *args, **kwargs):
-        profile = self.request.user.profile
-        form = CheckoutForm(initial= profile.address.get_address)
-        if self.request.GET.get('productId') and self.request.GET.get('action') == 'buynow':
-            product = Product.objects.get(pk=self.request.GET.get('productId'))
-            context = {
-                'product': product,
-                'form': form
-            }
-            
-        else:
-            context = {
-            'form': form
-            }
-
-        return render(self.request, 'ecomm/order-checkout.html', context)
-
-    def post(self, *args, **kwargs):
-        form = CheckoutForm(self.request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            address = f"{data['address']},\n{data['city']} ,{data['state']}-{data['pincode']},\n{data['country']}"
-            product = Product.objects.get(id=self.request.POST.get('productId'))
-            
-            order = Order(
-                        customer = self.request.user, order_amount = product.unitprice,
-                        payment_method=data['payment_method'], shipping_address = address, billing_address=address)
-            order.save()
-            order_amount = int(order.order_amount * 100)
-            order_receipt = order.order_id
-            DATA = {
-                'amount': order_amount,
-                'currency': 'INR',
-                'receipt': order_receipt,
-                'payment_capture': 1
-            }
-            res = client.order.create(data=DATA)
-            Order.objects.filter(pk=order.order_id).update(transaction_id=res.get('id'))
-            return redirect('payment', order_id=order.order_id, permanent=True)
-        messages.warning('Plese enter')
-        return redirect('order-checkout')
-
-def payment(request, order_id):
-    if request.method == 'GET':
-        order = Order.objects.get(pk=order_id)
-        context = {
-            'amount': int(order.order_amount * 100),
-            'order_id': order.transaction_id,
-            'order': order
-        }
-        return render(request, 'ecomm/checkout-payment.html', context)
-    else:
-        return HttpResponseNotAllowed
-
-@csrf_exempt
-def payment_success(request, order_id):
-    if request.method == 'POST':
-        # data = json.loads(request.body)
-        # response = data.get('response')
-        # order_id = data.get('order_id')
-        # order = Order.objects.get(pk=order_id)
-        # key =os.getenv('RAZORPAY_API_KEY_SECRET')
-        # matched = verify_payment_signanture(order.transaction_id, request.POST.get('razorpay_payment_id'), request.POST.get('razorpay_signature'),key)
-        # if matched:
-        Order.objects.filter(pk=order_id).update(payment_id=request.POST.get('razorpay_payment_id'))
-        return render(request, 'ecomm/order-success.html')
-    else:
-        return HttpResponseNotAllowed
-    #     else:
-    #         return JsonResponse({'payment': 'not verified'})
-    # elif request.method == 'GET':
-    #     return render(request, 'ecomm/order-success.html')
-

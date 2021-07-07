@@ -17,8 +17,8 @@ def get_total_cart_quantity(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
             try:
-                cart = Cart.objects.get(user = request.user)
-                return JsonResponse({"data": cart.get_cart_quantity}, safe=False)
+                cart, created = Cart.objects.get_or_create(user = request.user)
+                return JsonResponse({"data": cart.get_cart_quantity }, safe=False)
             except Exception as e:
                 return JsonResponse({'error': e}, safe=False)
         else:

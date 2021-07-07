@@ -1,5 +1,6 @@
 {% extends 'ecomm/index.html' %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 {% block title %} Checkout | Ecomm.com {% endblock title %}
 
 {%block header%}
@@ -20,8 +21,12 @@
             <div class="col-12 col-md-6">
                 <form method="POST" action="{% url 'order-checkout' %}">
                 {% csrf_token %}
-                        <input type="hidden" name="productId" value="{{ product.id }}">
-                        {{ form | crispy }}
+                {% if cartitems %}
+                    <input type="hidden" name="cartId" value="{{ cartId }}">
+                {% else %}
+                    <input type="hidden" name="productId" value="{{ product.id }}">
+                {% endif %}
+                {{ form | crispy }}
                     <button class="btn btn-warning w-75" type="submit">Place Order</button>
                 </form>
             </div>
@@ -30,13 +35,21 @@
                     <div class="card-header"><h4>Order summery</h4></div>
                     <div class="card-body">
                         <ol class="list-group list-group-numbered">
+                            {% if cartitems %}
+                                {% for item in cartitems %}
+                                <li class="d-flex justify-content-between list-group-item">
+                                    <strong>{{ item.product.title }}</strong>
+                                    <h6>&#8377; {{ item.get_total | intcomma }}</h6>
+                                </li> 
+                                {% endfor %}
+                            {% else %}
                             <li class="d-flex justify-content-between list-group-item">
                                 <!-- <div class=""> -->
-                                    {% load humanize %}
                                     <strong>{{ product.title }}</strong>
                                     <h6>&#8377; {{ product.unitprice | intcomma }}</h6>
                                 <!-- </div> -->
                             </li>
+                            {% endif %}
                         </ol>
                     </div>
                 </div>

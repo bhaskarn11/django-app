@@ -1,4 +1,4 @@
-{% extends 'ecomm/order-checkout.html' %}
+{% extends 'checkout/order-checkout.html' %}
 {% block title %} Payment Success | Ecomm.com {% endblock title %}
 {% block content%}
     <div class="container">
@@ -10,6 +10,7 @@
                             <h4 class="alert-heading">Order placed!</h4>
                             <p>Aww yeah, we got your order and it will be shipped with in 5 to 7 business days</p>
                         </div>
+                        <a class="btn btn-primary mt-3" href="{% url 'myorder' %}">Goto My Orders</a>
                     </div>
                 </div>
             </div>
