@@ -1,5 +1,6 @@
 {% extends 'ecomm/index.html' %}
 {% load static %}
+{% load humanize %}
 {% block title %} Cart | Ecomm.in {% endblock title %}
 
 {% block content %}
@@ -24,7 +25,7 @@
                         </div>
                         <div class="col-12 mx-3 mt-2">
                             <small>Quantity: {{ item.quantity }}</small>
-                            <strong class="ms-5">&#8377; {{item.get_total}} </strong>
+                            <strong class="ms-5">&#8377; {{item.get_total | intcomma}} </strong>
                         </div>
                     </div>
                     
@@ -40,13 +41,13 @@
                         <div class="col">
                             <div>
                             <strong>Cart Total</strong>
-                            <p>{{ cart.get_cart_total|floatformat:2 }}</p>
+                            <p>&#8377; {{ cart.get_cart_total | intcomma}}</p>
                         </div>
                         </div>
                         
                         <div class="col text-align-right">
                             <strong>Total items</strong>
-                            <p>{{ cart.get_cart_quantity }}</p>
+                            <p>{{ cart.get_cart_quantity  }}</p>
                         </div>
                     </div>
                 </div>

@@ -4,13 +4,15 @@ from uuid import uuid4
 # Create your models here.
 PRODUCT_CATEGORY = [
     ('Books', 'Books'),
-    ('Electronics', 'Electronics'),
-    ('Clothing', 'Clothing'),
-    ('Other', 'Other')
+    ('electronics', 'Electronics'),
+    ('Other', 'Other'),
+    ("men's clothing", "men's clothing"),
+    ("women's clothing", "women's clothing"),
+    ("jewelery", "jewelery")
 ]
 
 class Product(models.Model):
-    title = models.CharField(max_length=60)
+    title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
     category = models.CharField(max_length=30, choices=PRODUCT_CATEGORY,default=None, null=True)
     unitprice = models.DecimalField(null=True, decimal_places=2, max_digits=10)

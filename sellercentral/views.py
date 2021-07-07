@@ -1,4 +1,4 @@
-from ecomm.models import CartItem, Order
+from ecomm.models import Order
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
@@ -26,6 +26,6 @@ class OrderDetails(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        items = CartItem.objects.filter(cart=self.object.items)
+        items = self.object.get_order_items
         context['items'] = items
         return context
