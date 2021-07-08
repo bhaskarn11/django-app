@@ -16,7 +16,7 @@ import django_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -24,7 +24,7 @@ DEBUG = True
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-ALLOWED_HOSTS = ["ecommv1.herokuapp.com"]
+ALLOWED_HOSTS = ["ecommv1.herokuapp.com", "www.ecommv1.herokuapp.com", ".herokuapp.com"]
 
 # Application definition
 
