@@ -25,7 +25,9 @@ DEBUG = False
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = ["ecommv1.herokuapp.com", "www.ecommv1.herokuapp.com", ".herokuapp.com"]
-
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 # Application definition
 
 INSTALLED_APPS = [
