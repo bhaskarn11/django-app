@@ -64,6 +64,7 @@ static/
 media/
 dev.env
 
+staticfiles/
 # Flask stuff:
 instance/
 .webassets-cache

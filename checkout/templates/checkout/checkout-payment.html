@@ -1,4 +1,5 @@
 {% extends 'checkout/order-checkout.html' %}
+{% load static %}
 {% block title %} Order Payment | Ecomm.com {% endblock title %}
 
 {% block content %}
@@ -38,7 +39,7 @@
             "currency": "INR",
             "name": "Ecomm.in",
             "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
+            "image": "{% static 'images/favicon-32x32.png' %}",
             "order_id": "{{ order_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "callback_url": "{% url 'payment-success' order.order_id %}",
             "prefill": {
