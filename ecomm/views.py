@@ -11,7 +11,7 @@ from ecomm.forms import ReviewForm
 # Create your views here.
 
 def index(request):
-    messages.info(request,'This site is currently in development')
+    # messages.info(request,'This site is currently in development')
     return render(request, 'ecomm/index.html')
 
 
