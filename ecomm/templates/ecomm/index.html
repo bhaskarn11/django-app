@@ -4,11 +4,11 @@
 {% block nav %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid mx-2">
-        <a class="navbar-brand" href="{% url 'index' %}"><h4>Ecomm.in</h4></a>
+        <a class="navbar-brand" href="{% url 'index' %}"><h4>[website]</h4></a>
         <div class="navbar-nav d-block d-md-none ms-auto me-3">
           <a href="{% url 'cart' %}" class="nav-item nav-link">
             <i class="bi bi-bag fs-4"></i>
-            <span id="cart-quantity-badge" class="position-absolute translate-middle badge rounded-pill bg-danger">
+            <span class="position-absolute translate-middle badge rounded-pill bg-danger cart-quantity-badge">
               0
             </span>
           </a>
@@ -61,7 +61,7 @@
                 <div class="navbar-nav d-none d-md-block">
                   <a href="{% url 'cart' %}" class="nav-item nav-link">
                     <i class="bi bi-bag fs-4"></i>
-                    <span id="cart-quantity-badge" class="position-absolute translate-middle badge rounded-pill bg-danger">
+                    <span class="position-absolute translate-middle badge rounded-pill bg-danger cart-quantity-badge">
                       0
                     </span>
                   </a>

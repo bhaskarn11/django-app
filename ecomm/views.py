@@ -11,8 +11,8 @@ from ecomm.forms import ReviewForm
 # Create your views here.
 
 def index(request):
-    # messages.info(request,'This site is currently in development')
-    return render(request, 'ecomm/index.html')
+    messages.info(request,'This site is currently under development')
+    return redirect('search-result')
 
 
 class SearchView(ListView):
@@ -20,8 +20,11 @@ class SearchView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET
+        if query == 'all':
+            context['products'] = Product.objects.all()
+        else:
+            context['products'] = Product.objects.filter(description__contains=query.get('query'))
         context['query'] = query.get('query')
-        context['products'] = Product.objects.filter(description__contains=query.get('query'))
         return context
 
 

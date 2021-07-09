@@ -32,7 +32,7 @@
 						<legend>Update Profile Details</legend>
 					</div>
 					<div class="card-body">
-						<form novalidate method="POST" enctype="multipart/form-data">
+						<form novalidate method="POST" enctype="multipart/form-data" action="{% url 'profile' %}">
 							{% csrf_token %}
 							<div class="tab-content" id="myTabContent">
 								<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">

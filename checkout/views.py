@@ -54,8 +54,6 @@ class CheckoutView(View):
                 for item in cart.get_cartitems:
                     orderitem = OrderItem(product=item.product, quantity=item.quantity, price=item.price, order=order)
                     orderitem.save()
-
-                cart.delete()
             
             order_amount = int(order.order_amount * 100)
             order_receipt = order.order_id
@@ -87,6 +85,8 @@ def payment(request, order_id):
 @csrf_exempt
 def payment_success(request, order_id):
     if request.method == 'POST':
+        cart = Cart.objects.get(user=request.user)
+        cart.delete()
         order = Order.objects.get(pk=order_id)
         params_dict = {
             'razorpay_order_id': order.transaction_id ,
