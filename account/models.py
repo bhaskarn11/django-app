@@ -36,8 +36,17 @@ class Profile(models.Model):
     mobileNumber = models.CharField(max_length=16, null=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.display_name = self.get_display_name
+
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+    @property
+    def get_display_name(self):
+        displayName = f"{self.user.first_name} {self.user.last_name}"
+        return displayName
 
     # def save(self, *args, **kwargs):
     # 	super().save(self, *args, **kwargs) # calling the save method of parent class of Profile class

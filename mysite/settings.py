@@ -147,7 +147,7 @@ LOGIN_URL = 'login'
 
 
 
-DEFAULT_FROM_EMAIL = 'developer.bhaskarn@gmail.com'
+DEFAULT_FROM_EMAIL = 'Account <developer.bhaskarn@gmail.com>'
 # sendinblue SMTP email integration
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
