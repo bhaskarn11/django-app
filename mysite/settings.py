@@ -24,7 +24,7 @@ DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-ALLOWED_HOSTS = ["ecommv1.herokuapp.com", "via.placeholder.com", "cdn.jsdelivr.net", "127.0.0.1"]
+ALLOWED_HOSTS = ["ecommv1.herokuapp.com", "via.placeholder.com", "cdn.jsdelivr.net", "127.0.0.1", ".razorpay.com"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True

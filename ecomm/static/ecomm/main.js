@@ -8,16 +8,14 @@ function updateCartBadge() {
 			'X-CSRFToken': csrftoken
 		},
 	}).then(response => {
-		const elements = document.getElementsByClassName("cart-quantity-badge")
-		for (var element in elements){
-			if (response){
-				response.json().then(data => {
-					if (parseInt(data.data) > 99){
-						element.innerHTML = '99' + '+'
-					} else{
-						element.innerHTML = data.data
-					}
-				})
+		return response.json();
+	}).then(data => {
+		var elements = document.getElementsByClassName('cart-quantity-badge')
+		for (var element in elements) {
+			if (parseInt(data.data) > 99){
+				element.innerHTML = '99+'
+			} else{
+				element.innerHTML = data.data
 			}
 		}
 	})
@@ -26,3 +24,5 @@ function updateCartBadge() {
 window.onload = updateCartBadge
 
 
+
+					
