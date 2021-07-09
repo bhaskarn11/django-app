@@ -20,7 +20,7 @@ class SearchView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET
-        if query == 'all':
+        if query:
             context['products'] = Product.objects.all()
         else:
             context['products'] = Product.objects.filter(description__contains=query.get('query'))
