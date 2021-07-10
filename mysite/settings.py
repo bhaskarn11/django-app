@@ -19,10 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 
 # Loades environment variable
-if DEBUG:
-    load_dotenv('dev.env')
-else:
-    load_dotenv('.env')
+load_dotenv('.env')
 
 
 # Quick-start development settings - unsuitable for production

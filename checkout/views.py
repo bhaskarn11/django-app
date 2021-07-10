@@ -46,6 +46,7 @@ class CheckoutView(View):
                 product = Product.objects.get(id=self.request.POST.get('productId'))
                 order = Order(customer = self.request.user, order_amount = product.unitprice,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
+                order.save()
             else:
                 cart = Cart.objects.get(user=self.request.user.id)
                 order = Order(customer = self.request.user, order_amount = cart.get_cart_total,
@@ -54,8 +55,6 @@ class CheckoutView(View):
                 for item in cart.get_cartitems:
                     orderitem = OrderItem(product=item.product, quantity=item.quantity, price=item.price, order=order)
                     orderitem.save()
-
-                cart.delete()
             
             order_amount = int(order.order_amount * 100)
             order_receipt = order.order_id
@@ -87,6 +86,7 @@ def payment(request, order_id):
 @csrf_exempt
 def payment_success(request, order_id):
     if request.method == 'POST':
+        cart = Cart.objects.get(user=request.user)
         order = Order.objects.get(pk=order_id)
         params_dict = {
             'razorpay_order_id': order.transaction_id ,
@@ -95,6 +95,7 @@ def payment_success(request, order_id):
         }
         err = client.utility.verify_payment_signature(params_dict)
         if not err:
+            cart.delete()
             Order.objects.filter(pk=order_id).update(payment_id=request.POST.get('razorpay_payment_id'), status='Ordered')
             return render(request, 'checkout/order-success.html')
         else:
