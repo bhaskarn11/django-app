@@ -109,7 +109,6 @@ class Order(models.Model):
     payment_id = models.CharField(max_length=50, null=True)
     payment_method = models.CharField(choices=PAYMENT_OPTION, max_length=30, null= True)
     customer = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-    # items = models.ForeignKey(Cart, on_delete=models.DO_NOTHING, null=True)
     
     @property
     def get_order_amount(self):

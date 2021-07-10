@@ -47,6 +47,7 @@ class CheckoutView(View):
                 order = Order(customer = self.request.user, order_amount = product.unitprice,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
                 order.save()
+                OrderItem(product = product, order = order, quantity=1, price=product.unitprice).save()
             elif self.request.POST.get('action') == 'cart':
                 cart = Cart.objects.get(user=self.request.user.id)
                 order = Order(customer = self.request.user, order_amount = cart.get_cart_total,
