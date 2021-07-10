@@ -1,5 +1,5 @@
 function updateCartBadge() {
-
+	var elements = document.getElementsByClassName('cart-quantity-badge')
 	url = '/api/getcartquantity'
 	fetch(url, {
 		method: 'GET',
@@ -10,8 +10,7 @@ function updateCartBadge() {
 	}).then(response => {
 		return response.json();
 	}).then(data => {
-		var elements = document.getElementsByClassName('cart-quantity-badge')
-		for (var element in elements) {
+		for (var element of elements) {
 			if (parseInt(data.data) > 99){
 				element.innerHTML = '99+'
 			} else{

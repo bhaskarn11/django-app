@@ -19,14 +19,16 @@
         <hr>
         <div class="row">
             <div class="col-12 col-md-6">
-                <form method="POST" action="{% url 'order-checkout' %}">
-                {% csrf_token %}
-                {% if cartitems %}
-                    <input type="hidden" name="cartId" value="{{ cartId }}">
-                {% else %}
-                    <input type="hidden" name="productId" value="{{ product.id }}">
-                {% endif %}
-                {{ form | crispy }}
+                <form novalidate method="POST">
+                    {% csrf_token %}
+                    {% if cartitems %}
+                        <input type="hidden" name="cartId" value="{{ cartId }}">
+                        <input type="hidden" name="action" value="cart">
+                    {% else %}
+                        <input type="hidden" name="productId" value="{{ product.id }}">
+                        <input type="hidden" name="action" value="buynow">
+                    {% endif %}
+                    {{ form | crispy }}
                     <button class="btn btn-warning w-75" type="submit">Place Order</button>
                 </form>
             </div>

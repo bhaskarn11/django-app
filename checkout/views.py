@@ -42,11 +42,12 @@ class CheckoutView(View):
         if form.is_valid():
             data = form.cleaned_data
             address = f"{data['address']},\n{data['city']} ,{data['state']}-{data['pincode']},\n{data['country']}"
-            if self.request.POST.get('productId'):
+            if self.request.POST.get('action') == 'buynow':
                 product = Product.objects.get(id=self.request.POST.get('productId'))
                 order = Order(customer = self.request.user, order_amount = product.unitprice,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
-            else:
+                order.save()
+            elif self.request.POST.get('action') == 'cart':
                 cart = Cart.objects.get(user=self.request.user.id)
                 order = Order(customer = self.request.user, order_amount = cart.get_cart_total,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
