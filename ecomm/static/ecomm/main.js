@@ -1,5 +1,9 @@
 function updateCartBadge() {
+<<<<<<< HEAD
 	var elements = document.getElementsByClassName('cart-quantity-badge')
+=======
+	
+>>>>>>> dev
 	url = '/api/getcartquantity'
 	fetch(url, {
 		method: 'GET',

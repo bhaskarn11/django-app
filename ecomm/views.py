@@ -28,8 +28,8 @@ class SearchView(ListView):
         return context
 
 
-def productDetailView(request, pk):
-    model = Product.objects.get(id=pk)
+def productDetailView(request, sku):
+    model = Product.objects.get(sku=sku)
     
     if request.method == 'POST':
         form = ReviewForm(request.POST)
@@ -39,16 +39,16 @@ def productDetailView(request, pk):
                 review = Review(title= data['title'], content=data['content'], author=request.user.profile, product = model)
                 review.save()
                 messages.success(request,'Review posted!')
-                return redirect('product-details', pk)
+                return redirect('product-details', sku)
             else:
                 pass 
         else:
             messages.warning(request, 'You have to login to post a review!')
-            return redirect('product-details', pk)  
+            return redirect('product-details', sku)  
 
     form = ReviewForm()
-    reviews = Review.objects.filter(product=pk).all().order_by('-review_date')
-    avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
+    reviews = Review.objects.filter(product=model.id).all().order_by('-review_date')
+    avg_rating = reviews.aggregate(avg_rating=Avg('rating')).get('rating__avg') # calculates avarage rating
     rating= int(avg_rating) if avg_rating else None 
 
     return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'rating':rating, 'object': model })

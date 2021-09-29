@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from uuid import uuid4
+from ecomm.utils import order_id_generator, sku_generator, sku_barcode_gen
+from django.core.files import File
 # Create your models here.
 PRODUCT_CATEGORY = [
     ('Books', 'Books'),
@@ -20,7 +21,17 @@ class Product(models.Model):
     image = models.ImageField(
         default='products/default.jpg', upload_to='products')
     stock = models.PositiveIntegerField()
+    sku = models.CharField(max_length=20, blank=True, default=sku_generator())
+    dimensions = models.CharField(max_length=15, help_text="e.g - LxBxH", blank=True)
+    weight = models.IntegerField(help_text="in Kg.", blank=True, null=True)
+    sku_barcode = models.ImageField(upload_to='products/barcodes', blank = True)
 
+    def save(self, *args, **kwargs):
+        
+        buffer = sku_barcode_gen(self.sku)
+        self.sku_barcode.save(f"{self.sku}.png", File(buffer), save=False)
+        return super().save(self, *args, **kwargs)
+    
     def __repr__(self):
         return f"Product: {self.id}, {self.title}"
 
@@ -99,7 +110,7 @@ class Order(models.Model):
         ('Net Banking','Net Banking')
     ]
 
-    order_id = models.UUIDField(default=uuid4().hex, unique=True, primary_key=True)
+    order_id = models.CharField(unique=True, primary_key=True, max_length=25)
     order_amount = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=50)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
     shipping_address = models.TextField(max_length=150)
@@ -119,6 +130,11 @@ class Order(models.Model):
     def get_order_items(self):
         items = self.orderitem_set.all()
         return items
+
+    def save(self, *args, **kwargs):
+        # self.order_id = uuid4().hex
+        self.order_id = order_id_generator()
+        return super().save(self, args, kwargs)
 
     def __repr__(self):
         return f"OrdeID: {self.order_id} - {self.order_date}"

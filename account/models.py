@@ -48,6 +48,10 @@ class Profile(models.Model):
         displayName = f"{self.user.first_name} {self.user.last_name}"
         return displayName
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.display_name = self.user.get_full_name()
+    
     # def save(self, *args, **kwargs):
     # 	super().save(self, *args, **kwargs) # calling the save method of parent class of Profile class
 
