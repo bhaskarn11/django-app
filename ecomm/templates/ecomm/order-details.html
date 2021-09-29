@@ -10,7 +10,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        <strong>Order id: {{ object.order_id }}</strong>
+                        <caption>Order #: {{ object.order_id }}</caption>
                         {% if order.status == 'Ordered' %}
                         <span class="badge rounded-pill bg-secondary" >{{order.status}}</span>
                         {% elif order.status == 'Shipped' %}
@@ -27,7 +27,7 @@
                         <div class="col">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
-                                    <strong>Order amount: </strong>&#8377; {{ object.order_amount }}
+                                    <strong>Order amount: </strong>&#8377; {{ object.order_amount | intcomma }}
                                 </li>
                                 <li class="list-group-item">
                                     <strong>Shipping Address: </strong> {{ object.shipping_address }}
@@ -44,16 +44,17 @@
             <div class="col">
                 <div class="card my-2 my-md-0">
                     <div class="card-header">
-                        <strong>Items in this order</strong>
+                        <strong>Items in this order: </strong>
                     </div>
                     <div class="card-body">
                         
                         <div class="col">
-                            <ul class="list-group list-group-flush">
+                            <ul class="list-group">
                                 {% for item in items %}
                                     <li class="list-group-item">
-                                        <strong>{{ item.product.title }}</strong>
+                                        <a style="text-decoration: none;" href="{% url 'product-details' item.product.sku %}" target="_blank" rel="noopener noreferrer"> <strong>{{ item.product.title }}</strong> </a>
                                         <h5>&#8377; {{ item.get_total | intcomma }}</h5>
+                                        <caption>Qty. {{ item.quantity }}</caption>
                                     </li>
                                 {% endfor %}
                             </ul>

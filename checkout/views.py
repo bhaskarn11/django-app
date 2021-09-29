@@ -7,6 +7,7 @@ from ecomm.models import Cart, OrderItem, Product, Order
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from checkout.forms import CheckoutForm
+from ecomm.utils import order_confirmation_mail
 import os
 # razorpay API
 import razorpay
@@ -47,6 +48,8 @@ class CheckoutView(View):
                 order = Order(customer = self.request.user, order_amount = product.unitprice,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
                 order.save()
+                orderitem = OrderItem(product=product, quantity=1, price=product.unitprice, order=order)
+                orderitem.save()
             else:
                 cart = Cart.objects.get(user=self.request.user.id)
                 order = Order(customer = self.request.user, order_amount = cart.get_cart_total,
@@ -96,6 +99,7 @@ def payment_success(request, order_id):
         err = client.utility.verify_payment_signature(params_dict)
         if not err:
             cart.delete()
+            order_confirmation_mail(order, request.user)
             Order.objects.filter(pk=order_id).update(payment_id=request.POST.get('razorpay_payment_id'), status='Ordered')
             return render(request, 'checkout/order-success.html')
         else:
