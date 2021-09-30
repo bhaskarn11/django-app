@@ -26,11 +26,11 @@ class Product(models.Model):
     weight = models.IntegerField(help_text="in Kg.", blank=True, null=True)
     sku_barcode = models.ImageField(upload_to='products/barcodes', blank = True)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):        
         buffer = sku_barcode_gen(self.sku)
         self.sku_barcode.save(f"{self.sku}.png", File(buffer), save=False)
         return super().save(self, *args, **kwargs)
-    
+
     def __repr__(self):
         return f"Product: {self.id}, {self.title}"
 
