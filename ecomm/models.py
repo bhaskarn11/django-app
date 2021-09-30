@@ -36,7 +36,7 @@ class Product(models.Model):
         buffer = BytesIO()
         code128.write(buffer)
         self.sku_barcode.save(f"{self.sku}.png", File(buffer), save=False)
-        return super().save(self, *args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def __repr__(self):
         return f"Product: {self.id}, {self.title}"
