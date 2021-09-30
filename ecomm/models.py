@@ -27,7 +27,6 @@ class Product(models.Model):
     sku_barcode = models.ImageField(upload_to='products/barcodes', blank = True)
 
     def save(self, *args, **kwargs):
-        
         buffer = sku_barcode_gen(self.sku)
         self.sku_barcode.save(f"{self.sku}.png", File(buffer), save=False)
         return super().save(self, *args, **kwargs)
@@ -134,7 +133,7 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         # self.order_id = uuid4().hex
         self.order_id = order_id_generator()
-        return super().save(self, args, kwargs)
+        return super().save(self, *args, **kwargs)
 
     def __repr__(self):
         return f"OrdeID: {self.order_id} - {self.order_date}"
