@@ -13,7 +13,7 @@
             <h5>{{ object.title }}</h5>
             <small>
                 {% if rating %}
-                    <div id="review-stars">{{rating}}</div>
+                    <div class="review-stars">{{rating}}</div>
                 {% endif %}
             </small>
             <div class="row">
@@ -76,7 +76,11 @@
                         {% if reviews %}
                             {% for review in reviews %}
                                 <a href="#" class="list-group-item list-group-item-action mb-3" aria-current="true">
-                                    <span>Rating: {{review.rating}}</span>
+                                    <small>
+                                        {% if review.rating %}
+                                            <div class="review-stars">{{review.rating}}</div>
+                                        {% endif %}
+                                    </small>
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">{{ review.title }}</h5>
                                         <small>{{ review.review_date  }}</small>
