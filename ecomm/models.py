@@ -131,8 +131,11 @@ class Order(models.Model):
         items = self.orderitem_set.all()
         return items
 
-    def save(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.order_id = order_id_generator()
+        super().__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
         return super().save(*args, **kwargs)
 
     def __repr__(self):
