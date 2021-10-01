@@ -49,7 +49,7 @@ def productDetailView(request, sku):
 
     form = ReviewForm()
     reviews = Review.objects.filter(product=model.id).all().order_by('-review_date')
-    avg_rating = reviews.aggregate(avg_rating=Avg('rating')).get('rating__avg') # calculates avarage rating
+    avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
     rating= int(avg_rating) if avg_rating else None 
 
     return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'rating':rating, 'object': model })

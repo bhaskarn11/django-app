@@ -1,6 +1,14 @@
 {% extends 'ecomm/index.html' %}
 {% load humanize %}
-{% block title %}{% if not query == '' or not query %} {{ query }} {% else %} Search result {% endif %} - Ecomm.in{% endblock title %}
+{% block title %}
+    {% if not query == '' %}
+        {{ query }} 
+    {% elif not query %}
+        Explore - Ecomm.in
+    {% else %} 
+        Search result
+    {% endif %} - Ecomm.in
+{% endblock title %}
 
 {% block content %}
     <div class="container my-3">

@@ -16,20 +16,30 @@ function updateCartBadge() {
           element.innerHTML = data.data;
         }
       });
-      window.onload = updateCartBadge;
+      
     }
   });
 }
 
 const element = document.getElementById("review-stars");
-const reviewCount = element.innerHTML;
-if (reviewCount) {
-  element.innerHTML = '<i class="bi bi-star-fill"></i>';
-  let c = Math.floor(parseFloat(reviewCount));
-  for (let i = 1; i < c; i++) {
-    element.insertAdjacentHTML("beforeend", '<i class="bi bi-star-fill"></i>');
-  }
-  if (parseFloat(reviewCount) - c >= 0.5) {
-    element.insertAdjacentHTML("beforeend", '<i class="bi bi-star-half"></i>');
+if (element) {
+  const reviewCount = element.innerHTML;
+  if (reviewCount) {
+    element.innerHTML = '<i class="bi bi-star-fill"></i>';
+    let c = Math.floor(parseFloat(reviewCount));
+    for (let i = 1; i < c; i++) {
+      element.insertAdjacentHTML(
+        "beforeend",
+        '<i class="bi bi-star-fill"></i>'
+      );
+    }
+    if (parseFloat(reviewCount) - c >= 0.5) {
+      element.insertAdjacentHTML(
+        "beforeend",
+        '<i class="bi bi-star-half"></i>'
+      );
+    }
   }
 }
+
+window.onload = updateCartBadge;
