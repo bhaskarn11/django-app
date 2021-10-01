@@ -17,6 +17,7 @@ def index(request):
 
 class SearchView(ListView):
     model = Product
+    paginate_by = 10
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET
@@ -36,7 +37,7 @@ def productDetailView(request, sku):
         if request.user.is_authenticated:
             if form.is_valid():
                 data = form.cleaned_data
-                review = Review(title= data['title'], content=data['content'], author=request.user.profile, product = model)
+                review = Review(title= data['title'], content=data['content'], author=request.user.profile, product = model, rating=data['rating'])
                 review.save()
                 messages.success(request,'Review posted!')
                 return redirect('product-details', sku)

@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from ecomm.utils import order_id_generator, sku_generator, sku_barcode_gen
 from django.core.files import File
-import barcode
-from barcode.writer import ImageWriter
-from io import BytesIO
 
 # Create your models here.
 PRODUCT_CATEGORY = [
@@ -31,10 +28,7 @@ class Product(models.Model):
     sku_barcode = models.ImageField(upload_to='products/barcodes', blank = True)
 
     def save(self, *args, **kwargs):        
-        # buffer = sku_barcode_gen(self.sku)
-        code128 = barcode.get('code128', self.sku, writer=ImageWriter())
-        buffer = BytesIO()
-        code128.write(buffer)
+        buffer = sku_barcode_gen(self.sku)
         self.sku_barcode.save(f"{self.sku}.png", File(buffer), save=False)
         return super().save(*args, **kwargs)
 
@@ -138,9 +132,8 @@ class Order(models.Model):
         return items
 
     def save(self, *args, **kwargs):
-        # self.order_id = uuid4().hex
         self.order_id = order_id_generator()
-        return super().save(self, *args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def __repr__(self):
         return f"OrdeID: {self.order_id} - {self.order_date}"
