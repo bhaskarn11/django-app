@@ -110,7 +110,7 @@ class Order(models.Model):
         ('Net Banking','Net Banking')
     ]
 
-    order_id = models.CharField(unique=True, primary_key=True, max_length=25)
+    order_id = models.CharField(unique=True, primary_key=True, max_length=25, default=order_id_generator())
     order_amount = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=50)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
     shipping_address = models.TextField(max_length=150)
@@ -130,10 +130,6 @@ class Order(models.Model):
     def get_order_items(self):
         items = self.orderitem_set.all()
         return items
-
-    def __init__(self, *args, **kwargs):
-        self.order_id = order_id_generator()
-        super().__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         return super().save(*args, **kwargs)
