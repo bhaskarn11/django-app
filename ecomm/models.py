@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from ecomm.utils import order_id_generator, sku_generator, sku_barcode_gen
 from django.core.files import File
+from django.db.models import Avg
 # Create your models here.
 PRODUCT_CATEGORY = [
     ('Books', 'Books'),
@@ -23,18 +24,23 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
     sku = models.CharField(max_length=20, blank=True, default=sku_generator())
     dimensions = models.CharField(max_length=15, help_text="e.g - LxBxH", blank=True)
-    weight = models.IntegerField(help_text="in Kg.", blank=True, null=True)
+    weight = models.FloatField(help_text="in Kg.", blank=True, null=True)
     sku_barcode = models.ImageField(upload_to='products/barcodes', blank = True)
 
     def save(self, *args, **kwargs):
         
         buffer = sku_barcode_gen(self.sku)
         self.sku_barcode.save(f"{self.sku}.png", File(buffer), save=False)
-        return super().save(self, *args, **kwargs)
+        return super().save(*args, **kwargs)
     
     def __repr__(self):
         return f"Product: {self.id}, {self.title}"
 
+    @property
+    def get_average_rating(self):
+        reviews = Review.objects.filter(product=self).all().order_by('-review_date')
+        avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
+        return avg_rating if avg_rating else None
 
 
 class Review(models.Model):
@@ -110,7 +116,7 @@ class Order(models.Model):
         ('Net Banking','Net Banking')
     ]
 
-    order_id = models.CharField(unique=True, primary_key=True, max_length=25)
+    order_id = models.CharField(unique=True, primary_key=True, max_length=25, default=order_id_generator())
     order_amount = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=50)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
     shipping_address = models.TextField(max_length=150)
@@ -120,7 +126,6 @@ class Order(models.Model):
     payment_id = models.CharField(max_length=50, null=True)
     payment_method = models.CharField(choices=PAYMENT_OPTION, max_length=30, null= True)
     customer = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-    # items = models.ForeignKey(Cart, on_delete=models.DO_NOTHING, null=True)
     
     @property
     def get_order_amount(self):
@@ -133,9 +138,7 @@ class Order(models.Model):
         return items
 
     def save(self, *args, **kwargs):
-        # self.order_id = uuid4().hex
-        self.order_id = order_id_generator()
-        return super().save(self, args, kwargs)
+        return super().save(*args, **kwargs)
 
     def __repr__(self):
         return f"OrdeID: {self.order_id} - {self.order_date}"

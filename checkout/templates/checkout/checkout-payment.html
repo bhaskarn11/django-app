@@ -1,4 +1,5 @@
 {% extends 'checkout/order-checkout.html' %}
+{% load static %}
 {% block title %} Order Payment | Ecomm.com {% endblock title %}
 
 {% block content %}
@@ -9,14 +10,15 @@
                     <div class="card-header"><h4>Order summery</h4></div>
                     <div class="card-body">
                         <ul class="list-group list-group-numbered">
+                            {% load humanize %}
                             <li class="d-flex justify-content-between list-group-item">
-                                <!-- <div class=""> -->
-                                    {% load humanize %}
-                                    <strong>&#8377; {{ order.order_amount }}</strong>
-                                    <p><strong>Shipping Address: </strong> {{ order.shipping_address | intcomma }}</p>
-                                    <hr>
-                                    <p><strong>Billing Address: </strong> {{ order.shipping_address | intcomma }}</p>
-                                <!-- </div> -->
+                                    <strong>&#8377; {{ order.order_amount|intcomma }}</strong>
+                            </li>
+                            <li class="list-group-item">
+                                <p><strong>Shipping Address: </strong> {{ order.shipping_address }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <p><strong>Billing Address: </strong> {{ order.shipping_address }}</p>
                             </li>
                         </ul>
                     </div>
@@ -38,7 +40,7 @@
             "currency": "INR",
             "name": "Ecomm.in",
             "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
+            "image": "{% static 'ecomm/img/favicon-32x32.png' %}",
             "order_id": "{{ order_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "callback_url": "{% url 'payment-success' order.order_id %}",
             "prefill": {

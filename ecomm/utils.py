@@ -26,3 +26,20 @@ def sku_barcode_gen(code):
     buffer = BytesIO()
     code128.write(buffer)
     return buffer
+
+# def search_filter(prod,**kwargs):
+#     query = kwargs.get('query')
+#     category = kwargs.get('category')
+#     if category:
+#         product = prod.objects.filter(
+#             Q(description__icontains=query) |
+#             Q(title__icontains=query) & 
+#             Q(category__icontains=category)
+#         )
+#         return product
+#     else:
+#         product = prod.objects.filter(
+#             Q(description__icontains=query) |
+#             Q(title__icontains=query)
+#         )
+#         return product

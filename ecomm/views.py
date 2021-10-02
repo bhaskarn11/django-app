@@ -5,23 +5,40 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, View
 from ecomm.models import Cart, CartItem, OrderItem, Product, Order, Review
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from django.contrib import messages
 from ecomm.forms import ReviewForm
+
 # Create your views here.
 
 def index(request):
+    query = request.GET.get('query')
     messages.info(request,'This site is currently in development')
-    return render(request, 'ecomm/index.html')
+    return render(request, 'ecomm/index.html',{'query': query})
 
 
 class SearchView(ListView):
     model = Product
+    paginate_by = 2
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query = self.request.GET
-        context['query'] = query.get('query')
-        context['products'] = Product.objects.filter(description__contains=query.get('query'))
+        query = self.request.GET.get('query') if not (self.request.GET.get('query') == '') else None
+        category = self.request.GET.get('category')
+        context['query'] = query if query else "" 
+        if category and query:
+            context['products'] = Product.objects.filter(
+                Q(description__icontains=query) |
+                Q(title__icontains=query) & 
+                Q(category__icontains=category)
+            )
+        elif (query):
+            context['products'] = Product.objects.filter(
+            Q(description__icontains=query) |
+            Q(title__icontains=query)
+        )
+        else:
+            context['products'] = Product.objects.all()
+        
         return context
 
 
@@ -33,7 +50,7 @@ def productDetailView(request, sku):
         if request.user.is_authenticated:
             if form.is_valid():
                 data = form.cleaned_data
-                review = Review(title= data['title'], content=data['content'], author=request.user.profile, product = model)
+                review = Review(title= data['title'], content=data['content'], author=request.user.profile, product = model, rating=data['rating'])
                 review.save()
                 messages.success(request,'Review posted!')
                 return redirect('product-details', sku)
@@ -45,10 +62,10 @@ def productDetailView(request, sku):
 
     form = ReviewForm()
     reviews = Review.objects.filter(product=model.id).all().order_by('-review_date')
-    avg_rating = reviews.aggregate(avg_rating=Avg('rating')).get('rating__avg') # calculates avarage rating
-    rating= int(avg_rating) if avg_rating else None 
+    # avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
+    # rating= avg_rating if avg_rating else None 
 
-    return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'rating':rating, 'object': model })
+    return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'object': model })
 
 
 class OrderListView(ListView):
