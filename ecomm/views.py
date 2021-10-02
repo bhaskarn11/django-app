@@ -18,7 +18,6 @@ def index(request):
 
 class SearchView(ListView):
     model = Product
-    ordering = "-id"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page_number = self.request.GET.get('page')
@@ -34,16 +33,16 @@ class SearchView(ListView):
                 Q(title__icontains=query) & 
                 Q(category__icontains=category)
             )
-            paginator = Paginator(products, 8)
+            paginator = Paginator(products.order_by('id'), 8)
             context['products'] = paginator.get_page(page_number)
         elif (query):
             paginator = Paginator(Product.objects.filter(
                 Q(description__icontains=query) |
                 Q(title__icontains=query)
-            ), 8)
+            ).order_by('id'), 8)
             context['products'] = paginator.get_page(page_number)
         else:
-            paginator = Paginator(Product.objects.all(), 8)
+            paginator = Paginator(Product.objects.all().order_by('id'), 8)
             context['products'] = paginator.get_page(page_number)
         
         return context
