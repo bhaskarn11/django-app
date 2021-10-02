@@ -10,14 +10,15 @@
                     <div class="card-header"><h4>Order summery</h4></div>
                     <div class="card-body">
                         <ul class="list-group list-group-numbered">
+                            {% load humanize %}
                             <li class="d-flex justify-content-between list-group-item">
-                                <!-- <div class=""> -->
-                                    {% load humanize %}
-                                    <strong>&#8377; {{ order.order_amount }}</strong>
-                                    <p><strong>Shipping Address: </strong> {{ order.shipping_address | intcomma }}</p>
-                                    <hr>
-                                    <p><strong>Billing Address: </strong> {{ order.shipping_address | intcomma }}</p>
-                                <!-- </div> -->
+                                    <strong>&#8377; {{ order.order_amount|intcomma }}</strong>
+                            </li>
+                            <li class="list-group-item">
+                                <p><strong>Shipping Address: </strong> {{ order.shipping_address }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <p><strong>Billing Address: </strong> {{ order.shipping_address }}</p>
                             </li>
                         </ul>
                     </div>

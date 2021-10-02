@@ -6,21 +6,26 @@
 {% block content %}
 <div class="container my-5">
     <div class="row">
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'search-result' %}">{{ object.category|title }}</a></li>
+              <li class="breadcrumb-item active">{{ object.title|title|truncatechars:20 }}</li>
+            </ol>
+        </nav>
         <div class="col-12 col-md-5">
             <img class="img-thumbnail mx-auto" width="inherit" height="inherit" src="{{ object.image.url }}" alt="{{object.title}}">
         </div>
-        <div class="col-12 col-md-7">
+        <div class="col-12 col-md-7 mt-3">
             <h5>{{ object.title }}</h5>
-            <small>
-                {% if rating %}
-                    <div class="review-stars">{{rating}}</div>
-                {% endif %}
-            </small>
+            {% if object.get_average_rating %}
+            <small class="review-stars" style="color:darkorange">{{object.get_average_rating}}</small>
+            {% endif %}
             <div class="row">
                 <div>
-                    {% if object.discount_price %}
+                    {% if object.discount_unitprice %}
                         <span>
-                            &#8377; <del>{{ object.price | intcomma }}</del>
+                            &#8377; <del>{{ object.unitprice | intcomma }}</del>
                             <h3>&#8377; {{ object.discount_unitprice | intcomma }}</h3>
                         </span>
                     {% else %}
@@ -76,11 +81,9 @@
                         {% if reviews %}
                             {% for review in reviews %}
                                 <a href="#" class="list-group-item list-group-item-action mb-3" aria-current="true">
-                                    <small>
-                                        {% if review.rating %}
-                                            <div class="review-stars">{{review.rating}}</div>
-                                        {% endif %}
-                                    </small>
+                                    {% if review.rating %}
+                                        <small class="review-stars" style="color:darkorange">{{review.rating}}</small>
+                                    {% endif %}
                                     <div class="d-flex w-100 justify-content-between">
                                         <h5 class="mb-1">{{ review.title }}</h5>
                                         <small>{{ review.review_date  }}</small>
