@@ -7,3 +7,11 @@
 .product-card:hover {
     box-shadow: 2px 2px 5px gray;
 }
+
+.review-card {
+    transition: 100ms linear;
+}
+
+.review-card:hover {
+    box-shadow: 1px 1px 2px gray;
+}

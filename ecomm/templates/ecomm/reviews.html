@@ -1,0 +1,45 @@
+{% extends 'ecomm/index.html' %}
+{% load humanize %}
+{% block title %} Customer Reviews - {{ object.title | truncatechars:10 }} | Ecomm.com {% endblock title %}
+
+{% block content %}
+    <div class="container-fluid my-4">
+        <div class="row">
+            {% if product.total_review_count %}
+            <div class="col-12 col-md-3">
+                <div>
+                    <h4>Customer Reviews</h4> <h5>{{ product.get_average_rating }} out of 5</h5>
+                    {% for i in product.get_review_stats %}
+                    <small>{{ i }}% </small>
+                    <div class="progress mb-2">
+                        <div class="progress-bar" role="progressbar" style="width: {{ i }}%" aria-valuenow="{{ i }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-12 col-md-8">
+                <div class=" d-flex">
+                    <img class="img-thumbnail me-2" src="{{product.image.url}}" style="max-width: 60px; max-height: unset; object-fit: contain;" alt="{{ product.image.url }}">
+                    <a href="{% url 'product-details' product.sku %}"> <h5>{{ product.title }}</h5> </a>
+                </div>
+            </div>
+        </div>
+        <div class="row mx-auto mt-4 gx-2 gy-4">
+            {% for review in reviews %}
+            <div class="col-12 col-md-3">
+                <div class="card review-card">
+                    <div class="card-body">
+                        {% if review.rating %}
+                            <small title="{{review.rating}} out of 5 stars" class="review-stars" style="color:darkorange">{{review.rating}}</small>
+                        {% endif %}
+                      <strong class="card-title">{{ review.title }}</strong>
+                      <p class="card-text">{{ review.content }}</p>
+                      <small class="text-muted">30 people find this helpful</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
