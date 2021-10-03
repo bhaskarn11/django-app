@@ -79,8 +79,9 @@
                     <div class="flex-row mb-2">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#review-modal">Write a review</button>
                     </div>
-                    <div class="list-group">
+                    
                         {% if reviews %}
+                        <div class="list-group">
                             {% for review in reviews %}
                                 <a href="#" class="list-group-item list-group-item-action mb-3" aria-current="true">
                                     {% if review.rating %}
@@ -95,13 +96,19 @@
                                     <small>By {{ review.author.user.profile.display_name }}</small>
                                 </a>
                             {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'reviews' object.sku %}">see all reviews...</a>
+                        </div>
                         {% else %}
                             <div class="alert alert-primary" role="alert">
                                 No reviews to show
                             </div>
                         {% endif %}
-                    </div>
+                    
+                    
                 </div>
+                
             </div>
             <!-- review card END -->
         </div>
