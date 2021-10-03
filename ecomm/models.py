@@ -39,8 +39,11 @@ class Product(models.Model):
     def get_average_rating(self):
         reviews = Review.objects.filter(product=self).all().order_by('-review_date')
         avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
-        return avg_rating if avg_rating else None
+        return round(avg_rating,1) if avg_rating else None
 
+    @property
+    def total_review_count(self):
+        return Review.objects.filter(product=self).all().count()
 
 class Review(models.Model):
 

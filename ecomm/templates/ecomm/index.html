@@ -26,7 +26,7 @@
             <div class="mx-auto  w-50 d-none d-md-block">
               <form class="d-flex" method="GET" action="{% url 'search-result' %}" >
                 <div class="input-group">
-                    <input name="query" class="form-control " value="{{query}}" type="search" placeholder="Search" aria-label="Search">
+                    <input name="query" autocomplete="off" class="form-control " value="{{query}}" type="search" placeholder="Search for products, brands..." aria-label="Search">
                   <button class="btn btn-warning" type="submit">Search</button>
                 </div>
               </form>
