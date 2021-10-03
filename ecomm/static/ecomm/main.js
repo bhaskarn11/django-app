@@ -1,5 +1,5 @@
-function updateCartBadge() {
-	const elements = document.getElementsByClassName("cart-quantity-badge")
+// function updateCartBadge() {
+	const cartCountBadges = document.getElementsByClassName("cart-quantity-badge")
 	url = '/api/getcartquantity'
 	fetch(url, {
 		method: 'GET',
@@ -11,7 +11,7 @@ function updateCartBadge() {
 		
 		if (response){
 			response.json().then(data => {
-				for (const element of elements) {
+				for (const element of cartCountBadges) {
 					if (parseInt(data.data) > 99){
 						element.innerHTML = '99' + '+'
 					} else{
@@ -21,9 +21,9 @@ function updateCartBadge() {
 			})
 		}
 	})
-}
+// }
 
-window.onload = updateCartBadge
+// window.onload = updateCartBadge
 
 const elements = document.getElementsByClassName("review-stars");
 if (elements) {

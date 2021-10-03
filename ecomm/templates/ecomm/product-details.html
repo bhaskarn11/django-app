@@ -14,22 +14,24 @@
             </ol>
         </nav>
         <div class="col-12 col-md-5">
-            <img class="img-thumbnail mx-auto" width="inherit" height="inherit" src="{{ object.image.url }}" alt="{{object.title}}">
+            <img class="img-thumbnail mx-auto" style="object-fit: scale-down; max-width: inherit; max-height: inherit;" src="{{ object.image.url }}" alt="{{object.title}}">
         </div>
         <div class="col-12 col-md-7 mt-3">
             <h5>{{ object.title }}</h5>
             {% if object.get_average_rating %}
-            <small class="review-stars" style="color:darkorange">{{object.get_average_rating}}</small>
+                <span class="badge bg-primary me-2">{{ object.get_average_rating }}</span>
+                <small class="review-stars" style="color:darkorange">{{object.get_average_rating}}</small>
+                <span class="text-muted ms-2">({{ object.total_review_count }})</span>
             {% endif %}
             <div class="row">
                 <div>
                     {% if object.discount_unitprice %}
                         <span>
                             &#8377; <del>{{ object.unitprice | intcomma }}</del>
-                            <h3>&#8377; {{ object.discount_unitprice | intcomma }}</h3>
+                            <h3 style="color: crimson;">&#8377; {{ object.discount_unitprice | intcomma }}</h3>
                         </span>
                     {% else %}
-                        <span><h3>&#8377; {{ object.unitprice | intcomma }}</h3></span>
+                        <span><h3 style="color: crimson;">&#8377; {{ object.unitprice | intcomma }}</h3></span>
                     {% endif %}
                 </div>
                 <div class="col">
