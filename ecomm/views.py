@@ -77,6 +77,15 @@ def productDetailView(request, sku):
 
     return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'object': model })
 
+class ReviewListView(ListView):
+    model = Review
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = Product.objects.get(sku=self.kwargs['sku'])
+        context['product'] = product
+        context['reviews'] = Review.objects.filter(product=product).all().order_by('-review_date')
+        return context
 
 class OrderListView(ListView):
     model = Order

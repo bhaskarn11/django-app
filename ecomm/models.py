@@ -36,14 +36,27 @@ class Product(models.Model):
         return f"Product: {self.id}, {self.title}"
 
     @property
+    def get_all_reviews(self):
+        return Review.objects.filter(product=self).all()
+
+    @property
     def get_average_rating(self):
-        reviews = Review.objects.filter(product=self).all().order_by('-review_date')
+        reviews = self.get_all_reviews.order_by('-review_date')
         avg_rating = reviews.aggregate(Avg('rating')).get('rating__avg') # calculates avarage rating
         return round(avg_rating,1) if avg_rating else None
 
     @property
     def total_review_count(self):
-        return Review.objects.filter(product=self).all().count()
+        return self.get_all_reviews.count()
+
+    @property
+    def get_review_stats(self):
+        stats = []
+        for i in range(1,6):
+            stats.append(int(self.get_all_reviews.filter(rating=i).count()/self.total_review_count * 100))
+        
+        return stats
+
 
 class Review(models.Model):
 
@@ -65,6 +78,8 @@ class Review(models.Model):
 
     def __repr__(self):
         return f"Review: {self.id}, {self.title}"
+    
+
 
 
 class Cart(models.Model):
