@@ -7,7 +7,7 @@ from ecomm.models import Cart, OrderItem, Product, Order
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from checkout.forms import CheckoutForm
-from ecomm.utils import order_confirmation_mail
+from ecomm.utils import order_confirmation_mail, order_id_generator
 import os
 # razorpay API
 import razorpay
@@ -47,6 +47,7 @@ class CheckoutView(View):
                 product = Product.objects.get(id=self.request.POST.get('productId'))
                 order = Order(customer = self.request.user, order_amount = product.unitprice,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
+                order.order_id=order_id_generator()
                 order.save()
                 orderitem = OrderItem(product=product, quantity=1, price=product.unitprice, order=order)
                 orderitem.save()
@@ -54,6 +55,7 @@ class CheckoutView(View):
                 cart = Cart.objects.get(user=self.request.user.id)
                 order = Order(customer = self.request.user, order_amount = cart.get_cart_total,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
+                order.order_id=order_id_generator()
                 order.save()
                 for item in cart.get_cartitems:
                     orderitem = OrderItem(product=item.product, quantity=item.quantity, price=item.price, order=order)
@@ -69,7 +71,7 @@ class CheckoutView(View):
                 'payment_capture': 1
             }
             res = client.order.create(data=DATA)
-            Order.objects.filter(pk=order.order_id).update(transaction_id=res.get('id'))
+            Order.objects.filter(pk=order.pk).update(transaction_id=res.get('id'))
             return redirect('payment', order_id=order.order_id, permanent=True)
         messages.warning('Plese enter')
         return redirect('order-checkout')
@@ -77,7 +79,7 @@ class CheckoutView(View):
 @login_required
 def payment(request, order_id):
     if request.method == 'GET':
-        order = Order.objects.get(pk=order_id)
+        order = Order.objects.get(order_id=order_id)
         context = {
             'amount': int(order.order_amount * 100),
             'order_id': order.transaction_id,
@@ -90,9 +92,13 @@ def payment(request, order_id):
 @csrf_exempt
 def payment_success(request, order_id):
     if request.method == 'POST':
+<<<<<<< HEAD
         cart = Cart.objects.get(user=request.user)
         cart.delete()
         order = Order.objects.get(pk=order_id)
+=======
+        order = Order.objects.get(order_id=order_id)
+>>>>>>> dev
         params_dict = {
             'razorpay_order_id': order.transaction_id ,
             'razorpay_payment_id': request.POST.get('razorpay_payment_id'),
@@ -101,7 +107,10 @@ def payment_success(request, order_id):
         err = client.utility.verify_payment_signature(params_dict)
         if not err:
             order_confirmation_mail(order, request.user)
-            Order.objects.filter(pk=order_id).update(payment_id=request.POST.get('razorpay_payment_id'), status='Ordered')
+            Order.objects.filter(order_id=order_id).update(payment_id=request.POST.get('razorpay_payment_id'), status='Ordered')
+            for orderitem in order.get_order_items:
+                orderitem.product.stock -= orderitem.quantity
+                orderitem.product.save()
             return render(request, 'checkout/order-success.html')
         else:
             return render(request, 'checkout/payment-error.html', {"error": True}, status=500)

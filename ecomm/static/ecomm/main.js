@@ -50,3 +50,56 @@ if (elements) {
     reviewStarGenerator(element);
   }
 }
+
+// helpful review function
+const helpfulReviewButtons = document.getElementsByClassName(
+  "helpful-review-button"
+);
+
+for (const element of helpfulReviewButtons) {
+  element.addEventListener("click", function () {
+    var reviewID = this.dataset.reviewid;
+    // console.log('productId', productId, 'action', action)
+    if (user === "AnonymousUser") {
+      console.log(AnonymousUser);
+    } else {
+      helpfulReview(reviewID);
+    }
+  });
+}
+
+function helpfulReview(reviewID) {
+  var url = "/api/review/helpful";
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify({ "reviewID": reviewID })
+  }).then((response) => {
+    return response.json()
+  }).then( data => {
+    location.reload()
+  }).catch(e => console.log(e))
+}
+
+// enables bootstrap popover
+// [...document.querySelectorAll('[data-bs-toggle="popover"]')]
+//   .forEach(el => new bootstrap.Popover(el))
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl, {
+    html: true,
+  })
+})
+
+var popover = new bootstrap.Popover(document.querySelector('.review-popover'), {
+  container: 'body',
+  html: true
+})

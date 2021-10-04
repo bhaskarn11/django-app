@@ -10,17 +10,21 @@
         <div class="col-12 col-md-8">
             <h5>Shopping Cart</h5>
             <hr/>
-            <div class="list-group">
+            <div class="list-group list-group-flush">
                 {% for item in items %}
-                <div  class="list-group-item mb-3">
+                <div  class="list-group-item ">
                     <div class="d-flex w-100 justify-content-between row">
-                        <img class="img-thumbnail d-none d-md-block" style="max-height: 150px; max-width: 75px" src="{{ item.product.image.url }}" alt="">
+                        <img class="img-thumbnail " style="max-height: 150px; max-width: 75px; object-fit: scale-down;" src="{{ item.product.image.url }}" alt="">
                         <div class="col mx-3">
                             <a class="text-decoration-none d-flex-inline" href="{% url 'product-details' item.product.sku %}"><h6 class="mb-1">{{ item.product.title }}</h6></a>
                             <div class="btn-group mt-3">
                                 <button data-product={{item.product.id}} data-action="remove" class="btn btn-outline-primary btn-sm update-cart"><i class="bi bi-dash"></i></button>
                                 <!-- <input readonly value="{{ item.quantity }}" style="max-width: 50px;" type="number"> -->
+                                {% if item.product.stock > item.quantity %}
                                 <button data-product={{item.product.id}} data-action="add" class="btn btn-outline-primary btn-sm update-cart"><i class="bi bi-plus"></i></button>
+                                {% else %}
+                                <button disabled data-product={{item.product.id}} data-action="add" class="btn btn-outline-primary btn-sm update-cart"><i class="bi bi-plus"></i></button>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="col-12 mx-3 mt-2">

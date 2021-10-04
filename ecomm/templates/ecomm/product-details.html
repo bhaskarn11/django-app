@@ -1,6 +1,7 @@
 {% extends 'ecomm/index.html' %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load custom_tags %}
 {% block title %} {{ object.title }} | Ecomm.com {% endblock title %}
 
 {% block content %}
@@ -19,9 +20,15 @@
         <div class="col-12 col-md-7 mt-3">
             <h5>{{ object.title }}</h5>
             {% if object.get_average_rating %}
-                <span class="badge bg-primary me-2">{{ object.get_average_rating }}</span>
-                <small class="review-stars" style="color:darkorange">{{object.get_average_rating}}</small>
-                <span class="text-muted ms-2">({{ object.total_review_count }})</span>
+                <div class="my-2">
+                    <span class="badge bg-primary me-2">{{ object.get_average_rating }}</span>
+                    <!-- <span class="d-inline-block" > -->
+                        <a role="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ object.get_average_rating }} out of 5">
+                            <span class="review-stars" style="color: darkorange;">{{object.get_average_rating}}</span>
+                        </a>
+                    <!-- </span> -->
+                    <span class="text-muted ms-2">({{ object.total_review_count }})</span>
+                </div>
             {% endif %}
             <div class="row">
                 <div>
@@ -42,7 +49,6 @@
                 <form class="me-3" method="GET" action="{% url 'order-checkout' %}">
                     <input type="hidden" name="productId" value="{{ object.id }}">
                     <input type="hidden" name="action" value="buynow">
-                    {% csrf_token %}
                         <button class="btn btn-warning me-2" type="submit"><i class="bi bi-lightning-charge-fill"></i>Buy Now</button>
                         <button class="btn btn-info update-cart" data-product={{object.id}} data-action="add" type="button"><i class="bi bi-cart-plus-fill me-2"></i>Add to Cart</button>
                 </form>
@@ -81,20 +87,23 @@
                     </div>
                     
                         {% if reviews %}
-                        <div class="list-group">
+                        <div class="list-group list-group-flush">
                             {% for review in reviews %}
-                                <a href="#" class="list-group-item list-group-item-action mb-3" aria-current="true">
-                                    {% if review.rating %}
-                                        <small class="review-stars" style="color:darkorange">{{review.rating}}</small>
-                                    {% endif %}
-                                    <div class="d-flex w-100 justify-content-between">
+                                <div class="list-group-item mb-3">
+                                        {% include 'account/profile-avatar.html' with user=review.author.user %}
+                                        {% if review.rating %}
+                                            <small class="review-stars" style="color:darkorange">{{review.rating}}</small>
+                                        {% endif %}
+                                    <div class="d-flex w-100 mt-3 justify-content-between">
                                         <h5 class="mb-1">{{ review.title }}</h5>
                                         <small>{{ review.review_date  }}</small>
                                     </div>
                                     <p>{{ review.content }}</p>
-                                    <hr>
-                                    <small>By {{ review.author.user.profile.display_name }}</small>
-                                </a>
+                                    <button type="button" data-reviewid="{{review.id}}" class="btn btn-outline-secondary btn-sm helpful-review-button">Helpful</button>
+                                    {% if review.helpful_count != 0 %}
+                                        <small class="text-muted">{{ review.helpful_count }} people find this helpful</small>
+                                    {% endif %}
+                                </div>
                             {% endfor %}
                         </div>
                         <div class="card-footer">
