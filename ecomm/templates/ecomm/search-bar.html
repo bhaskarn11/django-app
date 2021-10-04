@@ -1,0 +1,16 @@
+<form class="d-flex" method="GET" action="{% url 'search-result' %}" >
+    <div class="input-group">
+        {% if category %}
+        <div class="d-none d-md-block">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
+        <ul class="dropdown-menu">
+          {% for c in category %}
+            <li><a class="dropdown-item" href="{% url 'search-result' %}?category={{c | urlencode}}">{{c}}</a></li>
+          {% endfor %}
+        </ul>
+        </div>
+        {% endif %}
+        <input name="query" spellcheck="false" autocomplete="off" class="form-control " value="{{query}}" type="search" placeholder="Search for products, brands..." aria-label="Search">
+      <button class="btn btn-warning" type="submit">Search</button>
+    </div>
+</form>

@@ -4,7 +4,7 @@
 {% block nav %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid mx-2">
-        <a class="navbar-brand" href="{% url 'index' %}"><h4>Ecomm.in</h4></a>
+        <a class="navbar-brand fs-5 d-inline" href="{% url 'index' %}"><h4><i class="bi bi-upc"></i><span>comm.in</span></h4></a>
         <div class="navbar-nav d-block d-md-none ms-auto me-3">
           <a href="{% url 'cart' %}" class="nav-item nav-link">
             <i class="bi bi-bag fs-4"></i>
@@ -24,12 +24,7 @@
             
             <!-- search bar START-->
             <div class="mx-auto  w-50 d-none d-md-block">
-              <form class="d-flex" method="GET" action="{% url 'search-result' %}" >
-                <div class="input-group">
-                    <input name="query" autocomplete="off" class="form-control " value="{{query}}" type="search" placeholder="Search for products, brands..." aria-label="Search">
-                  <button class="btn btn-warning" type="submit">Search</button>
-                </div>
-              </form>
+              {% include 'ecomm/search-bar.html' with query=query category=product_category %}
             </div>
             <!-- search bar END -->
 
@@ -38,28 +33,24 @@
                 <div class="navbar-nav justify-content-end me-4 d-none d-md-block">
                   <div class="dropdown">
                     <a class="nav-item nav-link dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      <strong>Hey, {{ user.username }}</strong>
+                      <strong>Hey, <i class="bi bi-at"></i>{{ user.username }}</strong>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
-                      <li><a class="dropdown-item" href="{% url 'myorder' %}">My Orders</a></li>
-                      <li><a class="dropdown-item " aria-current="page" href="{% url 'logout' %}">Logout</a></li>
+                      <li><a class="dropdown-item" href="{% url 'profile' %}"> <i class="bi bi-person-circle"></i> My Profile</a></li>
+                      <li><a class="dropdown-item" href="{% url 'myorder' %}"><i class="bi bi-box-seam"></i> My Orders</a></li>
+                      <li><a class="dropdown-item " aria-current="page" href="{% url 'logout' %}"> <i class="bi bi-box-arrow-right"></i> Logout</a></li>
                     </ul>
                   </div>
                 </div>
                 <div class="navbar-nav justify-content-end d-block d-md-none">
-                  <form class="nav-item d-flex" method="GET" action="{% url 'search-result' %}" >
-                    <div class="input-group">
-                      <input name="query" class="form-control " value="{{query}}" type="search" placeholder="Search" aria-label="Search">
-                      <button class="btn btn-warning" type="submit">Search</button>
-                    </div>
-                  </form>
-                  <a class="nav-item nav-link" aria-current="page" href="{% url 'profile' %}">My Profile</a>
-                  <a class="nav-item nav-link" href="{% url 'myorder' %}">My Orders</a>
-                  <a class="nav-item nav-link btn btn-outline-success" href="{% url 'logout' %}">Logout</a>
+                  {% include 'ecomm/search-bar.html' with query=query %}
+                  <a class="nav-item nav-link" aria-current="page" href="{% url 'profile' %}"> <i class="bi bi-person-circle"></i> Hey, <i class="bi bi-at"></i>{{user.username}}</a>
+                  <a class="nav-item nav-link" href="{% url 'myorder' %}"><i class="bi bi-box-seam"></i> My Orders</a>
+                  <a class="nav-item nav-link btn btn-outline-success" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
                 </div>
             {% else %}
                 <div class="navbar-nav justify-content-end">
+                  {% include 'ecomm/search-bar.html' with query=query %}
                     <a class="nav-item nav-link" aria-current="page" href="{% url 'login' %}">Login</a>
                     <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
                 </div>

@@ -1,30 +1,35 @@
 {% extends 'ecomm/index.html' %}
 {% load humanize %}
-{% block title %} Customer Reviews - {{ object.title | truncatechars:10 }} | Ecomm.com {% endblock title %}
+{% block title %} Customer Reviews - {{ product.title | truncatechars:15 }} | Ecomm.com {% endblock title %}
 
 {% block content %}
     <div class="container-fluid my-4">
-        <div class="row">
+        <div class="row gx-5">
             {% if product.total_review_count %}
-            <div class="col-12 col-md-3">
-                <div>
-                    <h4>Customer Reviews</h4> <h5>{{ product.get_average_rating }} out of 5</h5>
-                    {% for i in product.get_review_stats %}
-                    <small>{{ i }}% </small>
-                    <div class="progress mb-2">
-                        <div class="progress-bar" role="progressbar" style="width: {{ i }}%" aria-valuenow="{{ i }}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    {% endfor %}
+            <!-- review stats START -->
+            <div class="col-12 col-md-4">
+                <div class="d-block">
+                    <h4>Customer Reviews</h4> <hr> <strong>{{ product.get_average_rating }} out of 5</strong>
                 </div>
+                {% for i in product.get_review_stats %}
+                    <div class="d-flex justify-content-between">
+                        <small>{{ i.percent }}% </small><small>{{ i.rating_star }} star</small>
+                    </div>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ i.percent }}%" aria-label="review stats {{ i.percent }}%" aria-valuenow="{{ i }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                {% endfor %}
             </div>
+            <!-- review stats END -->
             {% endif %}
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-6">
                 <div class=" d-flex">
                     <img class="img-thumbnail me-2" src="{{product.image.url}}" style="max-width: 60px; max-height: unset; object-fit: contain;" alt="{{ product.image.url }}">
                     <a href="{% url 'product-details' product.sku %}"> <h5>{{ product.title }}</h5> </a>
                 </div>
             </div>
         </div>
+        <!-- review grid start -->
         <div class="row mx-auto mt-4 gx-2 gy-4">
             {% for review in reviews %}
             <div class="col-12 col-md-3">
@@ -35,11 +40,15 @@
                         {% endif %}
                       <strong class="card-title">{{ review.title }}</strong>
                       <p class="card-text">{{ review.content }}</p>
-                      <small class="text-muted">30 people find this helpful</small>
+                      <button type="button" data-reviewid="{{review.id}}" class="btn btn-outline-secondary btn-sm helpful-review-button">Helpful</button>
+                      {% if review.helpful_count != 0 %}
+                        <small class="text-muted">{{ review.helpful_count }} people find this helpful</small>
+                      {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+        <!-- review grid end -->
     </div>
 {% endblock content %}

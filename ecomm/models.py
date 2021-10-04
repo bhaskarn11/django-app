@@ -54,7 +54,8 @@ class Product(models.Model):
     def get_review_stats(self):
         stats = []
         for i in range(1,6):
-            stats.append(int(self.get_all_reviews.filter(rating=i).count()/self.total_review_count * 100))
+            percentage = int(self.get_all_reviews.filter(rating=i).count()/self.total_review_count * 100)
+            stats.append({'percent': percentage, 'rating_star': i})
         
         return stats
 
@@ -76,7 +77,9 @@ class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     rating = models.IntegerField(choices=RATING_CHOICE, default=None, blank=True, null=True)
     review_date = models.DateTimeField(auto_now_add=True)
-
+    helpful_count = models.PositiveIntegerField(default=0, null=True)
+    report_count = models.PositiveIntegerField(default=0, null=True)
+    
     def __repr__(self):
         return f"Review: {self.id}, {self.title}"
     
@@ -134,7 +137,7 @@ class Order(models.Model):
         ('Net Banking','Net Banking')
     ]
 
-    order_id = models.CharField(unique=True, primary_key=True, max_length=25, default=order_id_generator())
+    order_id = models.CharField(unique=True, max_length=25, null=True)
     order_amount = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=50)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
     shipping_address = models.TextField(max_length=150)
@@ -155,15 +158,12 @@ class Order(models.Model):
         items = self.orderitem_set.all()
         return items
 
-    def save(self, *args, **kwargs):
-        return super().save(*args, **kwargs)
-
     def __repr__(self):
         return f"OrdeID: {self.order_id} - {self.order_date}"
 
 class OrderItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=0)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=30)
     

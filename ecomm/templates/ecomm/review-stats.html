@@ -1,0 +1,10 @@
+<div>
+{% for i in product.get_review_stats %}
+    <div class="d-flex justify-content-between">
+        <small>{{ i.percent }}% </small><small>{{ i.rating_star }} star</small>
+    </div>
+    <div class="progress mb-2">
+        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ i.percent }}%" aria-label="review stats {{ i.percent }}%" aria-valuenow="{{ i.percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+{% endfor %}
+</div>

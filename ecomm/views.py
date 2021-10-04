@@ -4,11 +4,11 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
-from ecomm.models import Cart, CartItem, Product, Order, Review
+from ecomm.models import Cart, CartItem, Product, Order, Review, PRODUCT_CATEGORY
 from django.db.models import Q
 from django.contrib import messages
 from ecomm.forms import ReviewForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 def index(request):
@@ -31,24 +31,26 @@ class SearchView(ListView):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('query') if not (self.request.GET.get('query') == '') else None
         category = self.request.GET.get('category')
+        sort_by = self.request.GET.get('sort_by')
         context['query'] = query if query else ""
-        if category and query:
+        context['product_category'] = [i[0] for i in PRODUCT_CATEGORY]
+        if category and query and sort_by:
             products = Product.objects.filter(
                 Q(description__icontains=query) |
                 Q(title__icontains=query) & 
                 Q(category__icontains=category)
-            ).order_by('id')
+            ).filter(stock__gt = 1).order_by('id')
             # paginator = Paginator(products, 8)
             context['products'] = self.paginate_queryset(products,8)[1]
-        elif (query):
+        elif query and sort_by:
             products = Product.objects.filter(
                 Q(description__icontains=query) |
                 Q(title__icontains=query)
-            ).order_by('id')
+            ).filter(stock__gt = 0).order_by('id')
             context['products'] =  self.paginate_queryset(products,8)[1]
         else:
             # paginator = Paginator(Product.objects.all(), 8)
-            products = Product.objects.all().order_by('id')
+            products = Product.objects.all().filter(stock__gt = 0).order_by('id')
             context['products'] = self.paginate_queryset(products,8)[1]
         
         return context
@@ -74,8 +76,10 @@ def productDetailView(request, sku):
 
     form = ReviewForm()
     reviews = Review.objects.filter(product=model.id).all().order_by('-review_date')[:3]
+    cart = Cart.objects.get(user=request.user)
+    return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'object': model, 'cart': cart })
 
-    return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'object': model })
+
 
 class ReviewListView(ListView):
     model = Review
@@ -86,6 +90,8 @@ class ReviewListView(ListView):
         context['product'] = product
         context['reviews'] = Review.objects.filter(product=product).all().order_by('-review_date')
         return context
+
+
 
 class OrderListView(ListView):
     model = Order
@@ -140,8 +146,11 @@ def updateCart(request):
     cart = Cart.objects.get(user=customer)
     cartitem, created = CartItem.objects.get_or_create(cart = cart, product=product, price=product.unitprice)
     if action == 'add':
-        cartitem.quantity = cartitem.quantity + 1
-        cartitem.save()
+        if cartitem.product.stock > cartitem.quantity:
+            cartitem.quantity = cartitem.quantity + 1
+            cartitem.save()
+        else:
+            return JsonResponse({"added": False}, safe=False)
     elif action == 'remove':
         if cartitem.quantity == 1:
             cartitem.delete()
