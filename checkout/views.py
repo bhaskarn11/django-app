@@ -92,13 +92,7 @@ def payment(request, order_id):
 @csrf_exempt
 def payment_success(request, order_id):
     if request.method == 'POST':
-<<<<<<< HEAD
-        cart = Cart.objects.get(user=request.user)
-        cart.delete()
-        order = Order.objects.get(pk=order_id)
-=======
         order = Order.objects.get(order_id=order_id)
->>>>>>> dev
         params_dict = {
             'razorpay_order_id': order.transaction_id ,
             'razorpay_payment_id': request.POST.get('razorpay_payment_id'),
