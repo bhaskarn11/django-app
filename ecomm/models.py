@@ -135,7 +135,7 @@ class Order(models.Model):
         ('UPI', 'UPI'),
         ('Net Banking','Net Banking')
     ]
-
+    id = models.BigAutoField(auto_created=True, default=1, primary_key=True, serialize=False, verbose_name='ID' )
     order_id = models.CharField(unique=True, max_length=25, null=True)
     order_amount = models.DecimalField(default=None, null=True, decimal_places=2, max_digits=50)
     order_date = models.DateTimeField(auto_now_add=True) # adds datetime automaticaly wen object is created
