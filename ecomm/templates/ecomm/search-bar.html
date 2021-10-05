@@ -1,13 +1,18 @@
+{% load custom_tags %}
 <form class="d-flex" method="GET" action="{% url 'search-result' %}" >
     <div class="input-group">
-        {% if category %}
+        {% if categories %}
         <div class="d-none d-md-block">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
-        <ul class="dropdown-menu">
-          {% for c in category %}
-            <li><a class="dropdown-item" href="{% url 'search-result' %}?category={{c | urlencode}}">{{c}}</a></li>
-          {% endfor %}
-        </ul>
+          <!-- <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Category</button> -->
+          <select name="category" class="btn btn-secondary dropdown-toggle form-select" data-bs-toggle="dropdown" aria-expanded="false">
+            {% for c in categories %}
+              {% if c == current_category %}
+                <option class="bg-dark" selected>{{c}}</option>
+              {% else %}
+                <option class="bg-dark" value="{{c|urlencode}}">{{c}}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
         </div>
         {% endif %}
         <input name="query" spellcheck="false" autocomplete="off" class="form-control " value="{{query}}" type="search" placeholder="Search for products, brands..." aria-label="Search">

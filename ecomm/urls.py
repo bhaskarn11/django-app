@@ -9,5 +9,5 @@ urlpatterns = [
     path('products/<sku>/reviews', ReviewListView.as_view(template_name='ecomm/reviews.html'), name='reviews'),
     path('orders', OrderListView.as_view(template_name='ecomm/myorders.html'), name='myorder'),
     path('cart', cart, name='cart'),
-    path('orders/<pk>', views.OrderDetailView.as_view(template_name='ecomm/order-details.html'), name='order-details')
+    path('orders/<order_id>', views.OrderDetailView.as_view(template_name='ecomm/order-details.html'), name='order-details')
 ]
