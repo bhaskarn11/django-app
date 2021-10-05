@@ -33,19 +33,26 @@ class SearchView(ListView):
         category = self.request.GET.get('category')
         sort_by = self.request.GET.get('sort_by')
         context['query'] = query if query else ""
+        context['category'] = category if category else ""
         context['product_category'] = [i[0] for i in PRODUCT_CATEGORY]
         if category and query and sort_by:
             products = Product.objects.filter(
                 Q(description__icontains=query) |
-                Q(title__icontains=query) & 
+                Q(title__icontains=query) | 
                 Q(category__icontains=category)
-            ).filter(stock__gt = 1).order_by('id')
+            ).order_by(sort_by).filter(stock__gt = 0).order_by('id')
             # paginator = Paginator(products, 8)
             context['products'] = self.paginate_queryset(products,8)[1]
         elif query and sort_by:
             products = Product.objects.filter(
                 Q(description__icontains=query) |
                 Q(title__icontains=query)
+            ).order_by(sort_by).filter(stock__gt = 0).order_by('id')
+            context['products'] =  self.paginate_queryset(products,8)[1]
+        elif category:
+            products = Product.objects.filter(
+                Q(description__icontains=category) |
+                Q(category__icontains=category)
             ).filter(stock__gt = 0).order_by('id')
             context['products'] =  self.paginate_queryset(products,8)[1]
         else:
@@ -97,7 +104,6 @@ class OrderListView(ListView):
     model = Order
     paginate_by = 15
     # ordering = ['-order_date']
-
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -109,10 +115,14 @@ class OrderListView(ListView):
 
 class OrderDetailView(DetailView):
     model = Order
-
+    slug_field = 'order_id'
+    slug_url_kwarg = 'order_id'
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        # order = self.model.get(order_id=kwargs.get('order_id'))
         return super().dispatch(request, *args, **kwargs)
+
+    # def get
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

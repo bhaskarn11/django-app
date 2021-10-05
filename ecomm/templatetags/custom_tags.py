@@ -8,3 +8,9 @@ def current_query(context):
     if d.get('page'):
         d.pop('page')
     return urlencode(d)
+
+
+@register.simple_tag(takes_context=True)
+def current_category(context):
+    c = context['request'].GET.dict().get('category')
+    return c
