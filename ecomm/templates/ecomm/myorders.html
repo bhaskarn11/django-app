@@ -1,13 +1,14 @@
 {% extends 'ecomm/index.html' %}
 {% block title %}My Orders | Ecomm.com {% endblock title %}
-
+{% load humanize %}
 {% block content %}
     <div class="container my-3">
         <h5>My Orders</h5>
         <hr>
         <div class="row">
-            {% if object_list %}
-            <div class="list-group">
+            <div class="col-12">
+              {% if object_list %}
+            <div class="list-group list-group-flush">
                 {% for order in object_list %}
                     <a href="{% url 'order-details' order.order_id %}" class="list-group-item list-group-item-action mb-3" aria-current="true">
                       <div class="d-flex w-100 justify-content-between">
@@ -37,6 +38,7 @@
             <span><a class="btn btn-primary btn-md" href="{% url 'index' %}">Start Shopping</a></span>
             </div>
             {% endif %}
+            </div>
         </div>
     </div>
 {% endblock content %}

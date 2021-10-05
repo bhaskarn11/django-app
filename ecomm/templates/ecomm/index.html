@@ -24,7 +24,7 @@
             
             <!-- search bar START-->
             <div class="mx-auto  w-50 d-none d-md-block">
-              {% include 'ecomm/search-bar.html' with query=query category=product_category %}
+              {% include 'ecomm/search-bar.html' with query=query categories=product_category current_category=category %}
             </div>
             <!-- search bar END -->
 
@@ -38,7 +38,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                       <li><a class="dropdown-item" href="{% url 'profile' %}"> <i class="bi bi-person-circle"></i> My Profile</a></li>
                       <li><a class="dropdown-item" href="{% url 'myorder' %}"><i class="bi bi-box-seam"></i> My Orders</a></li>
-                      <li><a class="dropdown-item " aria-current="page" href="{% url 'logout' %}"> <i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                      <li><a role="button" class="dropdown-item " aria-current="page" href="{% url 'logout' %}"> <i class="bi bi-box-arrow-right"></i> Logout</a></li>
                     </ul>
                   </div>
                 </div>

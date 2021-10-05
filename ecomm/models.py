@@ -22,7 +22,7 @@ class Product(models.Model):
     image = models.ImageField(
         default='products/default.jpg', upload_to='products')
     stock = models.PositiveIntegerField()
-    sku = models.CharField(max_length=20, blank=True, default=sku_generator())
+    sku = models.CharField(max_length=20, blank=True, null=True)
     dimensions = models.CharField(max_length=15, help_text="e.g - LxBxH", blank=True)
     weight = models.FloatField(help_text="in Kg.", blank=True, null=True)
     sku_barcode = models.ImageField(upload_to='products/barcodes', blank = True)
