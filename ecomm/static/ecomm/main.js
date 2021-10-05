@@ -1,4 +1,11 @@
-// function updateCartBadge() {
+const el = document.querySelectorAll("img");
+const observer = lozad(el, {
+  rootMargin: "10px 0px", // syntax similar to that of CSS Margin
+  threshold: 0.1, // ratio of element convergence
+  enableAutoReload: true, // it will reload the new image when validating attributes changes
+}); // lazy loads elements with default selector as '.lozad'
+observer.observe();
+
 const cartCountBadges = document.getElementsByClassName("cart-quantity-badge");
 url = "/api/getcartquantity";
 fetch(url, {
@@ -20,7 +27,6 @@ fetch(url, {
     });
   }
 });
-// }
 
 // window.onload = updateCartBadge
 
@@ -76,30 +82,39 @@ function helpfulReview(reviewID) {
       "Content-Type": "application/json",
       "X-CSRFToken": csrftoken,
     },
-    body: JSON.stringify({ "reviewID": reviewID })
-  }).then((response) => {
-    return response.json()
-  }).then( data => {
-    location.reload()
-  }).catch(e => console.log(e))
+    body: JSON.stringify({ reviewID: reviewID }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      location.reload();
+    })
+    .catch((e) => console.log(e));
 }
 
 // enables bootstrap popover
 // [...document.querySelectorAll('[data-bs-toggle="popover"]')]
 //   .forEach(el => new bootstrap.Popover(el))
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipTriggerList = [].slice.call(
+  document.querySelectorAll('[data-bs-toggle="tooltip"]')
+);
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
+  return new bootstrap.Tooltip(tooltipTriggerEl);
+});
 
-var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverTriggerList = [].slice.call(
+  document.querySelectorAll('[data-bs-toggle="popover"]')
+);
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
   return new bootstrap.Popover(popoverTriggerEl, {
     html: true,
-  })
-})
+  });
+});
 
-var popover = new bootstrap.Popover(document.querySelector('.review-popover'), {
-  container: 'body',
-  html: true
-})
+var popover = new bootstrap.Popover(document.querySelector(".review-popover"), {
+  container: "body",
+  html: true,
+});
+
+observer.observe();

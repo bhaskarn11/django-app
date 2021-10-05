@@ -26,7 +26,7 @@ class SearchView(ListView):
     #     except EmptyPage:
     #         return paginator.get_page(page_number)
 
-
+    paginate_by = 8
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('query') if not (self.request.GET.get('query') == '') else None
@@ -40,25 +40,25 @@ class SearchView(ListView):
                 Q(description__icontains=query) |
                 Q(title__icontains=query) | 
                 Q(category__icontains=category)
-            ).order_by(sort_by).filter(stock__gt = 0).order_by('id')
+            ).filter(stock__gt = 0).order_by(sort_by)
             # paginator = Paginator(products, 8)
-            context['products'] = self.paginate_queryset(products,8)[1]
+            context['products'] = self.paginate_queryset(products,self.paginate_by)[1]
         elif query and sort_by:
             products = Product.objects.filter(
                 Q(description__icontains=query) |
                 Q(title__icontains=query)
-            ).order_by(sort_by).filter(stock__gt = 0).order_by('id')
-            context['products'] =  self.paginate_queryset(products,8)[1]
+            ).filter(stock__gt = 0).order_by(sort_by)
+            context['products'] =  self.paginate_queryset(products,self.paginate_by)[1]
         elif category:
             products = Product.objects.filter(
                 Q(description__icontains=category) |
                 Q(category__icontains=category)
-            ).filter(stock__gt = 0).order_by('id')
-            context['products'] =  self.paginate_queryset(products,8)[1]
+            ).filter(stock__gt = 0).order_by('title')
+            context['products'] =  self.paginate_queryset(products,self.paginate_by)[1]
         else:
             # paginator = Paginator(Product.objects.all(), 8)
-            products = Product.objects.all().filter(stock__gt = 0).order_by('id')
-            context['products'] = self.paginate_queryset(products,8)[1]
+            products = Product.objects.filter(stock__gt = 0).order_by('title')
+            context['products'] = self.paginate_queryset(products,self.paginate_by)[1]
         
         return context
 
@@ -83,7 +83,7 @@ def productDetailView(request, sku):
 
     form = ReviewForm()
     reviews = Review.objects.filter(product=model.id).all().order_by('-review_date')[:3]
-    cart = Cart.objects.get(user=request.user)
+    cart = Cart.objects.get(user=request.user) if not request.user.is_anonymous else None
     return render(request, 'ecomm/product-details.html', {'form': form, 'reviews': reviews, 'object': model, 'cart': cart })
 
 
