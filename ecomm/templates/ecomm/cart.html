@@ -23,7 +23,7 @@
                                 {% if item.product.stock > item.quantity %}
                                 <button data-product={{item.product.id}} data-action="add" class="btn btn-outline-primary btn-sm update-cart"><i class="bi bi-plus"></i></button>
                                 {% else %}
-                                <button disabled data-product={{item.product.id}} data-action="add" class="btn btn-outline-primary btn-sm update-cart"><i class="bi bi-plus"></i></button>
+                                <button disabled data-product={{item.product.id}} data-action="add" class="btn btn-outline-primary btn-sm "><i class="bi bi-plus"></i></button>
                                 {% endif %}
                             </div>
                         </div>

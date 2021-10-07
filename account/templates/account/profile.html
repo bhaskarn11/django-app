@@ -6,19 +6,25 @@
 	<div class="container-fluid my-3">
 		<div class="row">
 			
-			<div class="col col-md-3">
+			<div class="col-12 col-md-4">
 				<div class="card">
-					<div class="card-body d-flex">
-						<img style="max-width: 60px; max-height: 60px" src="{{ user.profile.image.url }}" alt="profile pic" class=" rounded-circle account-img me-2">
-						<div class="ms-auto">
-							<h4 class="account-heading">{{ user.first_name }} {{user.last_name}}</h4>
-							<a href="tel:{{user.profile.mobileNumber}}" class="text-info">{{user.profile.mobileNumber}}</a>
-							<a href='mailto:{{user.email}}' class="text-secondary">{{ user.email }}</a>
+					<div class="card-body">
+						
+						<div class="d-flex ms-auto">
+							<img style="max-width: 60px; max-height: 60px" data-src="{{ user.profile.image.url }}" alt="profile pic" class="img-thumbnail rounded-circle account-img me-2 lozad">
+							
+							<div>
+								<h4 class="account-heading">{{ user.first_name }} {{user.last_name}}</h4>
+								<div>
+									<a href="tel:{{user.profile.mobileNumber}}" class="text-info">{{user.profile.mobileNumber}}</a>
+									<a href='mailto:{{user.email}}' class="text-secondary">{{ user.email }}</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col col-md-6">
+			<div class="col-12 col-md-6">
 				<ul class="nav nav-tabs" id="myTab" role="tablist">
 					<li class="nav-item" role="presentation">
 					<button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Personal Details</button>

@@ -41,9 +41,10 @@
                         <span><h3 style="color: crimson;">&#8377; {{ object.unitprice | intcomma }}</h3></span>
                     {% endif %}
                 </div>
-                <div class="col">
+            </div>
+            <div class="row mb-2">
                 <p>{{ object.description }}</p>
-                </div>
+                <span style="color: green;">In stock</span>
             </div>
             <div class="row mx-auto">
                 <form class="me-3" method="GET" action="{% url 'order-checkout' %}">
