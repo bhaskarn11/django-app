@@ -6,7 +6,7 @@
     <div class="container-fluid mx-2">
         <a class="navbar-brand fs-5 d-inline" href="{% url 'index' %}"><h4><i class="bi bi-upc"></i><span>comm.in</span></h4></a>
         <div class="navbar-nav d-block d-md-none ms-auto me-3">
-          <a href="{% url 'cart' %}" class="nav-item nav-link">
+          <a href="{% url 'cart' %}" class="nav-item nav-link" title="Cart">
             <i class="bi bi-bag fs-4"></i>
             <span class="cart-quantity-badge position-absolute translate-middle badge rounded-pill bg-danger cart-quantity-badge">
               0
@@ -46,7 +46,7 @@
                   {% include 'ecomm/search-bar.html' with query=query %}
                   <a class="nav-item nav-link" aria-current="page" href="{% url 'profile' %}"> <i class="bi bi-person-circle"></i> Hey, <i class="bi bi-at"></i>{{user.username}}</a>
                   <a class="nav-item nav-link" href="{% url 'myorder' %}"><i class="bi bi-box-seam"></i> My Orders</a>
-                  <a class="nav-item nav-link btn btn-outline-success" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                  <div role="link" class="nav-item nav-link"><a class="btn btn-warning btn-sm" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></div>
                 </div>
             {% else %}
                 <div class="navbar-nav justify-content-end">
@@ -75,7 +75,7 @@
                 </div>
             {% endif %}
                 <div class="navbar-nav d-none d-md-block">
-                  <a href="{% url 'cart' %}" class="nav-item nav-link">
+                  <a href="{% url 'cart' %}" class="nav-item nav-link" title="Cart">
                     <i class="bi bi-bag fs-4"></i>
                     <span class="cart-quantity-badge position-absolute translate-middle badge rounded-pill bg-danger ">
                       0

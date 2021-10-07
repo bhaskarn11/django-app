@@ -9,7 +9,7 @@
               {% if c == current_category %}
                 <option class="bg-dark" selected>{{c}}</option>
               {% else %}
-                <option class="bg-dark" value="{{c|urlencode}}">{{c}}</option>
+                <option class="bg-dark" value="{{c}}">{{c}}</option>
               {% endif %}
             {% endfor %}
           </select>
