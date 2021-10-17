@@ -10,7 +10,7 @@
             <div class="col-12 col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <caption>Order #: {{ object.order_id }}</caption>
+                        <caption class="text-muted">Order #: {{ object.order_id }}</caption>
                         {% if order.status == 'Ordered' %}
                         <span class="badge rounded-pill bg-secondary" >{{order.status}}</span>
                         {% elif order.status == 'Shipped' %}
@@ -44,17 +44,24 @@
             <div class="col-12 col-md-6">
                 <div class="card my-2 my-md-0">
                     <div class="card-header">
-                        <strong>Items in this order: </strong>
+                        <strong>Items in this orders </strong>
                     </div>
                     <div class="card-body">
                         
                         <div class="col">
-                            <ul class="list-group">
+                            <ul class="list-group list-group-flush">
                                 {% for item in items %}
                                     <li class="list-group-item">
-                                        <a style="text-decoration: none;" href="{% url 'product-details' item.product.sku %}" target="_blank" rel="noopener noreferrer"> <strong>{{ item.product.title }}</strong> </a>
-                                        <h5>&#8377; {{ item.get_total | intcomma }}</h5>
-                                        <caption>Qty. {{ item.quantity }}</caption>
+                                        <div class="d-flex">
+                                            <img class="img-thumbnail" style="max-height: 150px; max-width: 75px; object-fit: scale-down;" src="{{ item.product.image.url }}" alt="">
+                                            <div class="ms-3">
+                                                <a style="text-decoration: none;" href="{% url 'product-details' item.product.sku %}" target="_blank" rel="noopener noreferrer">
+                                                    <strong>{{ item.product.title }}</strong> 
+                                                </a>
+                                                <h5>&#8377; {{ item.get_total | intcomma }}</h5>
+                                                <caption>Qty. {{ item.quantity }}</caption>
+                                            </div>
+                                        </div>
                                     </li>
                                 {% endfor %}
                             </ul>

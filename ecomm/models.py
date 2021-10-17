@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from ecomm.utils import order_id_generator, sku_generator, sku_barcode_gen
+from ecomm.utils import sku_barcode_gen
 from django.core.files import File
 from django.db.models import Avg
 # Create your models here.
@@ -34,6 +34,13 @@ class Product(models.Model):
     
     def __repr__(self):
         return f"Product: {self.id}, {self.title}"
+
+    @property
+    def get_unitprice(self):
+        if self.discount_unitprice:
+            return self.discount_unitprice
+        
+        return self.unitprice
 
     @property
     def get_all_reviews(self):

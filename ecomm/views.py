@@ -154,7 +154,7 @@ def updateCart(request):
     customer = request.user
     product = Product.objects.get(id=productId)
     cart = Cart.objects.get(user=customer)
-    cartitem, created = CartItem.objects.get_or_create(cart = cart, product=product, price=product.unitprice)
+    cartitem, created = CartItem.objects.get_or_create(cart = cart, product=product, price=product.get_unitprice)
     if action == 'add':
         if cartitem.product.stock > cartitem.quantity:
             cartitem.quantity = cartitem.quantity + 1
