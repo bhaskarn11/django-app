@@ -45,11 +45,11 @@ class CheckoutView(View):
             address = f"{data['address']},\n{data['city']} ,{data['state']}-{data['pincode']},\n{data['country']}"
             if self.request.POST.get('productId'):
                 product = Product.objects.get(id=self.request.POST.get('productId'))
-                order = Order(customer = self.request.user, order_amount = product.unitprice,
+                order = Order(customer = self.request.user, order_amount = product.get_unitprice,
                                 payment_method=data['payment_method'], shipping_address = address, billing_address=address)
                 order.order_id=order_id_generator()
                 order.save()
-                orderitem = OrderItem(product=product, quantity=1, price=product.unitprice, order=order)
+                orderitem = OrderItem(product=product, quantity=1, price=product.get_unitprice, order=order)
                 orderitem.save()
             else:
                 cart = Cart.objects.get(user=self.request.user.id)
