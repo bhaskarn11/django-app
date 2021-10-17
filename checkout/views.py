@@ -27,7 +27,7 @@ class CheckoutView(View):
                 'form': form
             }
         elif self.request.GET.get('action') == 'cart' and self.request.GET.get('cartId'):
-            data = self.request.POST
+            data = self.request.GET
             cartitems = Cart.objects.get(user=self.request.user.id).get_cartitems
             context = {
                 'cartitems': cartitems,
