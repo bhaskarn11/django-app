@@ -36,7 +36,7 @@
                 <div class="card mt-2 mt-md-0">
                     <div class="card-header"><h4>Order summery</h4></div>
                     <div class="card-body">
-                        <ol class="list-group list-group-numbered">
+                        <ul class="list-group">
                             {% if cartitems %}
                                 {% for item in cartitems %}
                                 <li class="d-flex justify-content-between list-group-item">
@@ -52,7 +52,7 @@
                                 <!-- </div> -->
                             </li>
                             {% endif %}
-                        </ol>
+                        </ul>
                     </div>
                 </div>
             </div>
