@@ -180,7 +180,7 @@ EMAIL_USE_TLS = True
 
 # Google Cloud Cred
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(BASE_DIR, 'django-ecomm-70c3a25731a9.json')
+    os.path.join(BASE_DIR, 'google-credentials.json')
 )
 
 GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
