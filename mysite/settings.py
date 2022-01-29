@@ -193,4 +193,5 @@ DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 # AWS_LOCATION = 'media'
 
+
 django_heroku.settings(locals())
