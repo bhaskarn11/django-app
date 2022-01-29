@@ -179,12 +179,11 @@ EMAIL_USE_TLS = True
 # AWS_QUERYSTRING_AUTH = False
 
 # Google Cloud Cred
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(BASE_DIR, 'google-credentials.json')
-)
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#     os.path.join(BASE_DIR, 'google-credentials.json')
+# )
 
 GS_BUCKET_NAME = os.getenv('GS_BUCKET_NAME')
-
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
